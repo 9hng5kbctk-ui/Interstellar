@@ -84,57 +84,79 @@
     <div class="ring-system"></div>
   </div>
 
-  <!-- Cursor-following spaceman (desktop only; pointer-events none) -->
-  <div id="spaceman" class="spaceman" aria-hidden="true">
-    <div class="spaceman-inner">
-      <svg class="spaceman-svg" viewBox="0 0 64 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- jetpack glow -->
-        <ellipse class="spaceman-thrust" cx="32" cy="72" rx="6" ry="8" fill="url(#thrustGrad)"/>
-        <!-- jetpack -->
-        <rect x="14" y="34" width="8" height="18" rx="2" fill="#4c1d95"/>
-        <rect x="42" y="34" width="8" height="18" rx="2" fill="#4c1d95"/>
-        <!-- body / suit -->
-        <ellipse cx="32" cy="44" rx="14" ry="16" fill="#e2e8f0"/>
-        <ellipse cx="32" cy="44" rx="14" ry="16" fill="url(#suitGrad)" fill-opacity="0.35"/>
-        <!-- chest panel -->
-        <rect x="26" y="40" width="12" height="10" rx="2" fill="#1e293b"/>
-        <circle cx="32" cy="45" r="2.5" fill="#67e8f9"/>
-        <!-- helmet -->
-        <circle cx="32" cy="22" r="14" fill="#cbd5e1"/>
-        <circle cx="32" cy="22" r="12" fill="#0f172a"/>
-        <!-- visor reflection -->
-        <ellipse cx="32" cy="22" rx="9" ry="8" fill="url(#visorGrad)"/>
-        <path d="M26 18c2-3 6-4 10-2" stroke="#67e8f9" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
-        <!-- helmet rim -->
-        <circle cx="32" cy="22" r="12" stroke="#94a3b8" stroke-width="2" fill="none"/>
-        <!-- arms -->
-        <ellipse cx="16" cy="42" rx="5" ry="7" fill="#e2e8f0" transform="rotate(-20 16 42)"/>
-        <ellipse cx="48" cy="42" rx="5" ry="7" fill="#e2e8f0" transform="rotate(20 48 42)"/>
-        <!-- gloves -->
-        <circle cx="14" cy="48" r="4" fill="#a78bfa"/>
-        <circle cx="50" cy="48" r="4" fill="#a78bfa"/>
-        <!-- boots -->
-        <ellipse cx="26" cy="60" rx="5" ry="4" fill="#1e293b"/>
-        <ellipse cx="38" cy="60" rx="5" ry="4" fill="#1e293b"/>
-        <defs>
-          <linearGradient id="visorGrad" x1="24" y1="14" x2="40" y2="30" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#7c3aed"/>
-            <stop offset="0.5" stop-color="#3b82f6"/>
-            <stop offset="1" stop-color="#22c55e"/>
-          </linearGradient>
-          <linearGradient id="suitGrad" x1="18" y1="28" x2="46" y2="60" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#a78bfa"/>
-            <stop offset="1" stop-color="#22c55e"/>
-          </linearGradient>
-          <linearGradient id="thrustGrad" x1="32" y1="64" x2="32" y2="80" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#fbbf24"/>
-            <stop offset="0.5" stop-color="#f97316" stop-opacity="0.8"/>
-            <stop offset="1" stop-color="#ef4444" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
-      </svg>
-    </div>
+  <!-- Cursor-following spaceman: size/position inlined so it never goes giant if CSS fails -->
+  <div id="spaceman" aria-hidden="true" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 48px;
+    height: 60px;
+    z-index: 99999;
+    pointer-events: none;
+    opacity: 0;
+    overflow: visible;
+    will-change: transform;
+  ">
+    <svg width="48" height="60" viewBox="0 0 64 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;width:48px;height:60px;max-width:48px;filter:drop-shadow(0 0 8px rgba(167,139,250,0.6));">
+      <ellipse cx="32" cy="72" rx="6" ry="8" fill="#fbbf24" opacity="0.85"/>
+      <rect x="14" y="34" width="8" height="18" rx="2" fill="#4c1d95"/>
+      <rect x="42" y="34" width="8" height="18" rx="2" fill="#4c1d95"/>
+      <ellipse cx="32" cy="44" rx="14" ry="16" fill="#e2e8f0"/>
+      <rect x="26" y="40" width="12" height="10" rx="2" fill="#1e293b"/>
+      <circle cx="32" cy="45" r="2.5" fill="#67e8f9"/>
+      <circle cx="32" cy="22" r="14" fill="#cbd5e1"/>
+      <circle cx="32" cy="22" r="12" fill="#0f172a"/>
+      <ellipse cx="32" cy="22" rx="9" ry="8" fill="#7c3aed"/>
+      <path d="M26 18c2-3 6-4 10-2" stroke="#67e8f9" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+      <circle cx="32" cy="22" r="12" stroke="#94a3b8" stroke-width="2" fill="none"/>
+      <ellipse cx="16" cy="42" rx="5" ry="7" fill="#e2e8f0" transform="rotate(-20 16 42)"/>
+      <ellipse cx="48" cy="42" rx="5" ry="7" fill="#e2e8f0" transform="rotate(20 48 42)"/>
+      <circle cx="14" cy="48" r="4" fill="#a78bfa"/>
+      <circle cx="50" cy="48" r="4" fill="#a78bfa"/>
+      <ellipse cx="26" cy="60" rx="5" ry="4" fill="#1e293b"/>
+      <ellipse cx="38" cy="60" rx="5" ry="4" fill="#1e293b"/>
+    </svg>
   </div>
+  <script>
+    /* Spaceman cursor follower — inline so it works even if script.js fails to load */
+    (function () {
+      var el = document.getElementById('spaceman');
+      if (!el) return;
+      // Skip touch devices
+      if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) {
+        el.style.display = 'none';
+        return;
+      }
+      var mx = window.innerWidth / 2, my = window.innerHeight / 2;
+      var x = mx, y = my, shown = false;
+      var ease = 0.15;
+      document.addEventListener('mousemove', function (e) {
+        mx = e.clientX;
+        my = e.clientY;
+        if (!shown) {
+          shown = true;
+          el.style.opacity = '1';
+          x = mx;
+          y = my;
+        }
+      }, { passive: true });
+      document.addEventListener('mouseleave', function () {
+        el.style.opacity = '0';
+        shown = false;
+      });
+      function frame() {
+        x += (mx - x) * ease;
+        y += (my - y) * ease;
+        var dx = mx - x;
+        var tilt = Math.max(-15, Math.min(15, dx * 0.1));
+        // Offset so it sits just below-right of the cursor tip
+        el.style.transform =
+          'translate3d(' + (x + 14) + 'px,' + (y + 14) + 'px,0) rotate(' + tilt + 'deg)';
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    })();
+  </script>
 
   <!-- Navigation -->
   <header id="site-header" class="fixed top-0 inset-x-0 z-50 transition-all duration-300">
