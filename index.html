@@ -135,66 +135,44 @@
       0%,100% { opacity: .7; transform: scale(1); }
       50% { opacity: 1; transform: scale(1.08); }
     }
+    /* REAL Earth photo texture (images/earth.jpg) — not CSS color blobs */
     #enter-gate .earth-sphere {
       position: absolute; inset: 0; border-radius: 50%; overflow: hidden;
-      /* Deep ocean base + night side */
-      background:
-        radial-gradient(circle at 28% 30%, rgba(255,255,255,.4) 0%, transparent 22%),
-        radial-gradient(circle at 70% 70%, #020617 0%, transparent 55%),
-        radial-gradient(circle at 50% 50%, #0ea5e9 0%, #0369a1 35%, #0c4a6e 55%, #082f49 75%, #020617 100%);
+      background-color: #0c4a6e;
+      background-image: url('images/earth.jpg');
+      background-repeat: repeat-x;
+      background-size: 200% 100%;
+      background-position: 0% center;
+      animation: earthSpinMap 50s linear infinite;
       box-shadow:
-        inset -18px -14px 32px rgba(0,0,0,.65),
-        inset 8px 6px 20px rgba(125,211,252,.15),
-        0 0 40px rgba(56,189,248,.45),
-        0 0 80px rgba(34,197,94,.25);
+        inset -22px -16px 36px rgba(0,0,0,.7),
+        inset 10px 8px 24px rgba(125,211,252,.12),
+        0 0 40px rgba(56,189,248,.5),
+        0 0 80px rgba(34,197,94,.2);
     }
-    #enter-gate .earth-land {
-      position: absolute; inset: 0; opacity: 1;
-      /* Continents — Americas-ish left, Africa/Europe center, Asia right */
+    @keyframes earthSpinMap {
+      from { background-position: 0% center; }
+      to { background-position: -200% center; }
+    }
+    /* Soft 3D sphere shading over the photo */
+    #enter-gate .earth-shade {
+      position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
       background:
-        radial-gradient(ellipse 22% 38% at 28% 42%, #4ade80 0%, #15803d 45%, transparent 70%),
-        radial-gradient(ellipse 14% 20% at 24% 28%, #86efac 0%, #166534 50%, transparent 72%),
-        radial-gradient(ellipse 12% 28% at 48% 38%, #22c55e 0%, #14532d 50%, transparent 70%),
-        radial-gradient(ellipse 10% 14% at 50% 58%, #a3e635 0%, #3f6212 55%, transparent 72%),
-        radial-gradient(ellipse 28% 32% at 68% 40%, #4ade80 0%, #166534 40%, transparent 68%),
-        radial-gradient(ellipse 16% 18% at 72% 62%, #65a30d 0%, #365314 50%, transparent 70%),
-        radial-gradient(ellipse 18% 12% at 38% 72%, #f5f5f4 0%, #a8a29e 40%, transparent 65%),
-        radial-gradient(ellipse 10% 8% at 62% 22%, #fafafa 0%, transparent 70%);
-      mix-blend-mode: normal;
+        radial-gradient(circle at 32% 28%, rgba(255,255,255,.22) 0%, transparent 28%),
+        radial-gradient(circle at 70% 60%, transparent 35%, rgba(0,0,0,.45) 100%),
+        linear-gradient(105deg, rgba(255,255,255,.12) 0%, transparent 40%, rgba(0,0,0,.35) 100%);
     }
-    #enter-gate .earth-land::before {
-      content: '';
-      position: absolute; inset: 0;
-      /* Desert / warm land tones */
-      background:
-        radial-gradient(ellipse 8% 10% at 46% 42%, rgba(202,138,4,.75) 0%, transparent 70%),
-        radial-gradient(ellipse 10% 8% at 66% 48%, rgba(180,83,9,.55) 0%, transparent 70%);
-    }
-    #enter-gate .earth-clouds {
-      position: absolute; inset: -8%; opacity: .55;
-      background:
-        radial-gradient(ellipse 20% 9% at 40% 35%, rgba(255,255,255,.55), transparent 70%),
-        radial-gradient(ellipse 24% 10% at 62% 48%, rgba(255,255,255,.4), transparent 70%),
-        radial-gradient(ellipse 16% 7% at 30% 60%, rgba(255,255,255,.35), transparent 70%),
-        radial-gradient(ellipse 18% 8% at 55% 28%, rgba(255,255,255,.3), transparent 70%),
-        radial-gradient(ellipse 14% 6% at 75% 55%, rgba(255,255,255,.35), transparent 70%);
-      animation: egCloud 28s linear infinite;
-    }
-    @keyframes egCloud { to { transform: rotate(360deg); } }
-    #enter-gate .earth-shine {
-      position: absolute; inset: 0; border-radius: 50%;
-      background:
-        linear-gradient(125deg, rgba(255,255,255,.35) 0%, transparent 38%),
-        linear-gradient(to left, rgba(0,0,0,.35) 0%, transparent 45%);
-      pointer-events: none;
-    }
+    #enter-gate .earth-land,
+    #enter-gate .earth-clouds,
+    #enter-gate .earth-shine { display: none !important; }
     #enter-gate .earth-atmosphere {
       position: absolute; inset: -8%; border-radius: 50%;
-      border: 2px solid rgba(125,211,252,.45);
+      border: 2px solid rgba(125,211,252,.5);
       box-shadow:
-        0 0 16px rgba(56,189,248,.5),
-        0 0 40px rgba(56,189,248,.25),
-        inset 0 0 20px rgba(125,211,252,.15);
+        0 0 16px rgba(56,189,248,.55),
+        0 0 40px rgba(56,189,248,.28),
+        inset 0 0 20px rgba(125,211,252,.12);
+      pointer-events: none;
     }
     #enter-gate .orbit-track {
       position: absolute; inset: 0; z-index: 3;
@@ -306,10 +284,9 @@
         <div class="orbit-ring-visual"></div>
         <div class="earth-core">
           <div class="earth-glow"></div>
-          <div class="earth-sphere">
-            <div class="earth-land"></div>
-            <div class="earth-clouds"></div>
-            <div class="earth-shine"></div>
+          <!-- Real Earth map photo (upload images/earth.jpg with the site) -->
+          <div class="earth-sphere" role="img" aria-label="Planet Earth">
+            <div class="earth-shade"></div>
           </div>
           <div class="earth-atmosphere"></div>
         </div>
