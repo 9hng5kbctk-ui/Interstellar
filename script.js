@@ -11,6 +11,204 @@
 
   // Spaceman cursor is handled by the inline script in index.html
 
+  // ----- Entrance: gate stars + Earth orbit + music boom -----
+  (function initEntrance() {
+    const audio = document.getElementById('bg-music');
+    const gate = document.getElementById('enter-gate');
+    const enterPlay = document.getElementById('enter-play');
+    const statusEl = document.getElementById('music-status');
+    const mini = document.getElementById('mini-player');
+    const miniToggle = document.getElementById('mini-toggle');
+    const iconPlay = document.getElementById('icon-play');
+    const iconPause = document.getElementById('icon-pause');
+    const volume = document.getElementById('mini-volume');
+    const miniTitle = document.getElementById('mini-title');
+    const flash = document.getElementById('enter-flash');
+    const gateCanvas = document.getElementById('gate-stars');
+
+    if (!gate) return;
+
+    document.body.style.overflow = 'hidden';
+    if (miniTitle) miniTitle.textContent = 'Interstellar';
+    if (audio) audio.volume = volume ? Number(volume.value) : 0.7;
+
+    // Dense twinkling starfield on the pure black gate
+    if (gateCanvas && gateCanvas.getContext) {
+      const gctx = gateCanvas.getContext('2d');
+      let gw = 0;
+      let gh = 0;
+      let stars = [];
+      let gateRaf = null;
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function sizeGate() {
+        gw = window.innerWidth;
+        gh = window.innerHeight;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        gateCanvas.width = gw * dpr;
+        gateCanvas.height = gh * dpr;
+        gateCanvas.style.width = gw + 'px';
+        gateCanvas.style.height = gh + 'px';
+        gctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const count = Math.min(320, Math.floor((gw * gh) / 4500));
+        stars = [];
+        for (let i = 0; i < count; i++) {
+          stars.push({
+            x: Math.random() * gw,
+            y: Math.random() * gh,
+            r: Math.random() * 1.6 + 0.2,
+            a: Math.random() * 0.7 + 0.25,
+            tw: Math.random() * Math.PI * 2,
+            sp: 0.01 + Math.random() * 0.03,
+            warm: Math.random() > 0.9,
+            bright: Math.random() > 0.97,
+          });
+        }
+      }
+
+      function drawGateStars(t) {
+        if (gate.classList.contains('is-hidden')) {
+          if (gateRaf) cancelAnimationFrame(gateRaf);
+          return;
+        }
+        gctx.clearRect(0, 0, gw, gh);
+        gctx.fillStyle = '#000';
+        gctx.fillRect(0, 0, gw, gh);
+
+        for (let i = 0; i < stars.length; i++) {
+          const s = stars[i];
+          const tw = reduce ? 1 : 0.45 + 0.55 * Math.sin(t * s.sp + s.tw);
+          const alpha = s.a * tw;
+
+          if (s.bright) {
+            gctx.beginPath();
+            gctx.fillStyle = 'rgba(255,255,255,' + alpha * 0.15 + ')';
+            gctx.arc(s.x, s.y, s.r * 4, 0, Math.PI * 2);
+            gctx.fill();
+          }
+
+          if (s.warm) {
+            gctx.fillStyle = 'rgba(251, 191, 36,' + alpha + ')';
+          } else if (s.r > 1.2) {
+            gctx.fillStyle = 'rgba(196, 181, 253,' + alpha + ')';
+          } else {
+            gctx.fillStyle = 'rgba(255, 255, 255,' + alpha + ')';
+          }
+          gctx.beginPath();
+          gctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          gctx.fill();
+        }
+        gateRaf = requestAnimationFrame(drawGateStars);
+      }
+
+      sizeGate();
+      gateRaf = requestAnimationFrame(drawGateStars);
+      window.addEventListener(
+        'resize',
+        function () {
+          sizeGate();
+        },
+        { passive: true }
+      );
+    }
+
+    function showStatus(msg) {
+      if (!statusEl) return;
+      statusEl.textContent = msg;
+      statusEl.classList.remove('hidden');
+    }
+
+    function updateToggleUI(playing) {
+      if (iconPlay) iconPlay.classList.toggle('hidden', playing);
+      if (iconPause) iconPause.classList.toggle('hidden', !playing);
+    }
+
+    function boomAndEnter() {
+      if (flash) {
+        flash.classList.remove('is-boom');
+        // reflow to restart animation
+        void flash.offsetWidth;
+        flash.classList.add('is-boom');
+      }
+      gate.classList.add('is-leaving');
+      window.setTimeout(function () {
+        gate.classList.add('is-hidden');
+        document.body.style.overflow = '';
+        if (mini) mini.classList.remove('hidden');
+      }, 550);
+    }
+
+    async function tryPlay() {
+      if (!audio) return false;
+      try {
+        await audio.play();
+        updateToggleUI(true);
+        return true;
+      } catch (err) {
+        updateToggleUI(false);
+        return false;
+      }
+    }
+
+    function onMissingFile() {
+      showStatus(
+        'Add your track as music/song.mp3 and re-upload — then Enter will blast the song.'
+      );
+    }
+
+    if (audio) {
+      audio.addEventListener('error', function () {
+        /* message shown when user hits enter */
+      });
+    }
+
+    if (enterPlay) {
+      enterPlay.addEventListener('click', async function () {
+        enterPlay.disabled = true;
+        const ok = await tryPlay();
+        // Always enter the site on click — boom either way
+        boomAndEnter();
+        if (!ok) {
+          // Soft message only if we know file is missing
+          if (audio && (audio.error || audio.networkState === HTMLMediaElement.NETWORK_NO_SOURCE)) {
+            // Mini player still visible; user may add file later
+            onMissingFile();
+          }
+        }
+        window.setTimeout(function () {
+          enterPlay.disabled = false;
+        }, 800);
+      });
+    }
+
+    if (miniToggle && audio) {
+      miniToggle.addEventListener('click', async function () {
+        if (audio.paused) {
+          const ok = await tryPlay();
+          if (!ok) onMissingFile();
+        } else {
+          audio.pause();
+          updateToggleUI(false);
+        }
+      });
+    }
+
+    if (volume && audio) {
+      volume.addEventListener('input', function () {
+        audio.volume = Number(volume.value);
+      });
+    }
+
+    if (audio) {
+      audio.addEventListener('play', function () {
+        updateToggleUI(true);
+      });
+      audio.addEventListener('pause', function () {
+        updateToggleUI(false);
+      });
+    }
+  })();
+
   // ----- Header scroll state -----
   const header = document.getElementById('site-header');
   const onScrollHeader = () => {

@@ -1,0 +1,6 @@
+Put your song file here and name it:
+  song.mp3
+or
+  song.m4a
+
+Then upload this whole music folder to GitHub with your site files.
