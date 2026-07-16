@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Astra Terra — Between the Stars and the Soil</title>
+  <meta name="description" content="Astra Terra — cosmic folk and electronic soundscapes. Music, tour dates, and visuals from the edge of Earth and deep space." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            space: {
+              void: '#050508',
+              deep: '#0a0a12',
+              mid: '#12121f',
+              nebula: '#1a1028',
+            },
+            cosmic: {
+              purple: '#7c3aed',
+              violet: '#a78bfa',
+              blue: '#3b82f6',
+              cyan: '#67e8f9',
+            },
+            earth: {
+              green: '#22c55e',
+              moss: '#4ade80',
+              gold: '#eab308',
+              amber: '#fbbf24',
+              soil: '#854d0e',
+            },
+          },
+          fontFamily: {
+            display: ['"Orbitron"', 'system-ui', 'sans-serif'],
+            body: ['"Outfit"', 'system-ui', 'sans-serif'],
+          },
+          animation: {
+            'float': 'float 8s ease-in-out infinite',
+            'float-slow': 'float 12s ease-in-out infinite',
+            'pulse-glow': 'pulseGlow 4s ease-in-out infinite',
+            'orbit': 'orbit 40s linear infinite',
+            'twinkle': 'twinkle 3s ease-in-out infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-16px)' },
+            },
+            pulseGlow: {
+              '0%, 100%': { opacity: '0.5' },
+              '50%': { opacity: '1' },
+            },
+            orbit: {
+              '0%': { transform: 'rotate(0deg)' },
+              '100%': { transform: 'rotate(360deg)' },
+            },
+            twinkle: {
+              '0%, 100%': { opacity: '0.3' },
+              '50%': { opacity: '1' },
+            },
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-space-void text-white font-body antialiased overflow-x-hidden">
+  <!-- Starfield canvas -->
+  <canvas id="starfield" aria-hidden="true"></canvas>
+
+  <!-- Floating orbs / planets (decorative) -->
+  <div class="cosmic-bg" aria-hidden="true">
+    <div class="nebula nebula-1"></div>
+    <div class="nebula nebula-2"></div>
+    <div class="nebula nebula-3"></div>
+    <div class="planet planet-earth animate-float-slow"></div>
+    <div class="planet planet-purple animate-float"></div>
+    <div class="planet planet-gold"></div>
+    <div class="ring-system"></div>
+  </div>
+
+  <!-- Navigation -->
+  <header id="site-header" class="fixed top-0 inset-x-0 z-50 transition-all duration-300">
+    <nav class="mx-auto max-w-6xl px-4 sm:px-6 py-4 flex items-center justify-between">
+      <a href="#hero" class="font-display text-lg sm:text-xl tracking-widest font-semibold text-white hover:text-earth-amber transition-colors">
+        ASTRA<span class="text-cosmic-violet">·</span>TERRA
+      </a>
+      <button id="nav-toggle" class="md:hidden p-2 rounded-lg border border-white/10 bg-white/5 backdrop-blur" aria-label="Toggle menu" aria-expanded="false">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <ul id="nav-menu" class="hidden md:flex items-center gap-8 text-sm tracking-wide text-white/70">
+        <li><a href="#music" class="nav-link hover:text-earth-amber transition-colors">Music</a></li>
+        <li><a href="#discography" class="nav-link hover:text-earth-amber transition-colors">Discography</a></li>
+        <li><a href="#about" class="nav-link hover:text-earth-amber transition-colors">About</a></li>
+        <li><a href="#tour" class="nav-link hover:text-earth-amber transition-colors">Tour</a></li>
+        <li><a href="#gallery" class="nav-link hover:text-earth-amber transition-colors">Gallery</a></li>
+        <li>
+          <a href="#tour" class="ml-2 px-4 py-2 rounded-full bg-gradient-to-r from-cosmic-purple to-earth-green text-white font-medium hover:opacity-90 transition-opacity shadow-lg shadow-cosmic-purple/30">
+            Tickets
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="md:hidden hidden border-t border-white/10 bg-space-deep/95 backdrop-blur-xl">
+      <ul class="px-6 py-4 space-y-3 text-sm tracking-wide">
+        <li><a href="#music" class="block py-2 text-white/80 hover:text-earth-amber">Music</a></li>
+        <li><a href="#discography" class="block py-2 text-white/80 hover:text-earth-amber">Discography</a></li>
+        <li><a href="#about" class="block py-2 text-white/80 hover:text-earth-amber">About</a></li>
+        <li><a href="#tour" class="block py-2 text-white/80 hover:text-earth-amber">Tour</a></li>
+        <li><a href="#gallery" class="block py-2 text-white/80 hover:text-earth-amber">Gallery</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center px-4 sm:px-6 pt-20">
+      <div class="relative z-10 max-w-4xl mx-auto text-center">
+        <p class="reveal font-display text-xs sm:text-sm tracking-[0.35em] uppercase text-cosmic-cyan/80 mb-6">
+          Cosmic Folk · Earth Frequencies
+        </p>
+        <h1 class="reveal reveal-delay-1 font-display text-5xl sm:text-7xl md:text-8xl font-bold tracking-tight leading-none mb-6">
+          <span class="text-gradient-cosmic">ASTRA</span>
+          <span class="block text-gradient-earth mt-1">TERRA</span>
+        </h1>
+        <p class="reveal reveal-delay-2 text-lg sm:text-xl text-white/70 max-w-xl mx-auto mb-10 font-light leading-relaxed">
+          Between the stars and the soil — songs for wandering souls and rooted hearts.
+        </p>
+        <div class="reveal reveal-delay-3 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a href="#music" class="btn-primary group">
+            <span class="inline-flex items-center gap-2">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              Listen Now
+            </span>
+          </a>
+          <a href="#tour" class="btn-secondary">
+            Upcoming Shows
+          </a>
+        </div>
+        <div class="reveal reveal-delay-4 mt-16 flex justify-center">
+          <a href="#music" class="scroll-hint flex flex-col items-center gap-2 text-white/40 hover:text-white/70 transition-colors" aria-label="Scroll to music">
+            <span class="text-xs tracking-widest uppercase">Explore</span>
+            <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Music Player -->
+    <section id="music" class="relative py-24 sm:py-32 px-4 sm:px-6">
+      <div class="max-w-4xl mx-auto">
+        <div class="section-header reveal text-center mb-12">
+          <p class="font-display text-xs tracking-[0.3em] uppercase text-earth-gold mb-3">Now Playing</p>
+          <h2 class="font-display text-3xl sm:text-4xl font-semibold">Featured Transmission</h2>
+          <div class="section-line mx-auto mt-4"></div>
+        </div>
+
+        <div class="reveal glass-card p-6 sm:p-8 rounded-3xl">
+          <div class="flex flex-col sm:flex-row gap-6 items-start sm:items-center mb-6">
+            <div class="album-art-orbit shrink-0 w-28 h-28 rounded-full overflow-hidden ring-2 ring-earth-gold/40 ring-offset-4 ring-offset-space-deep shadow-xl shadow-cosmic-purple/20">
+              <div class="w-full h-full bg-gradient-to-br from-cosmic-purple via-earth-green to-earth-gold flex items-center justify-center">
+                <span class="font-display text-2xl font-bold opacity-90">AT</span>
+              </div>
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-display text-xl sm:text-2xl font-semibold truncate">Orbital Gardens</h3>
+              <p class="text-white/50 text-sm mt-1">Astra Terra · Single · 2025</p>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <span class="chip">Ambient Folk</span>
+                <span class="chip">Electronic</span>
+                <span class="chip">3:42</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Spotify embed placeholder — replace src with your Spotify embed URL -->
+          <div class="player-embed rounded-2xl overflow-hidden bg-black/40 border border-white/10">
+            <iframe
+              id="spotify-embed"
+              style="border-radius:12px"
+              src="https://open.spotify.com/embed/album/1DFixLWuPkv3KT3TnV35m3?utm_source=generator&theme=0"
+              width="100%"
+              height="152"
+              frameBorder="0"
+              allowfullscreen=""
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+              title="Spotify player"
+            ></iframe>
+          </div>
+
+          <!-- Optional YouTube embed (hidden by default; toggle in script or show both) -->
+          <div class="mt-4 player-tabs flex gap-2">
+            <button type="button" data-player="spotify" class="player-tab active">Spotify</button>
+            <button type="button" data-player="youtube" class="player-tab">YouTube</button>
+          </div>
+          <div id="youtube-embed" class="hidden mt-4 rounded-2xl overflow-hidden border border-white/10 aspect-video bg-black/50">
+            <!-- Replace VIDEO_ID with your track/video ID -->
+            <iframe
+              class="w-full h-full min-h-[200px]"
+              src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+              title="YouTube music video"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              loading="lazy"
+            ></iframe>
+          </div>
+          <p class="mt-4 text-xs text-white/30 text-center">
+            Swap the embed URLs in <code class="text-white/50">index.html</code> for your own Spotify / YouTube links.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Discography -->
+    <section id="discography" class="relative py-24 sm:py-32 px-4 sm:px-6">
+      <div class="max-w-6xl mx-auto">
+        <div class="section-header reveal text-center mb-14">
+          <p class="font-display text-xs tracking-[0.3em] uppercase text-cosmic-violet mb-3">The Catalog</p>
+          <h2 class="font-display text-3xl sm:text-4xl font-semibold">Discography</h2>
+          <p class="mt-3 text-white/50 max-w-md mx-auto">Albums and EPs as worlds — each a planet in the Astra Terra system.</p>
+          <div class="section-line mx-auto mt-4"></div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
+          <!-- Album card 1 -->
+          <article class="reveal disc-card group" data-planet="earth">
+            <div class="planet-card">
+              <div class="planet-sphere planet-sphere-earth">
+                <div class="planet-atmosphere"></div>
+                <div class="planet-surface flex items-center justify-center">
+                  <span class="font-display text-3xl font-bold text-white/90 drop-shadow-lg">OG</span>
+                </div>
+              </div>
+              <div class="planet-ring"></div>
+            </div>
+            <div class="mt-6 text-center">
+              <h3 class="font-display text-lg font-semibold group-hover:text-earth-moss transition-colors">Orbital Gardens</h3>
+              <p class="text-sm text-white/45 mt-1">LP · 2025</p>
+              <p class="text-xs text-white/30 mt-2">12 tracks · 48 min</p>
+            </div>
+          </article>
+
+          <!-- Album card 2 -->
+          <article class="reveal reveal-delay-1 disc-card group" data-planet="purple">
+            <div class="planet-card">
+              <div class="planet-sphere planet-sphere-purple">
+                <div class="planet-atmosphere"></div>
+                <div class="planet-surface flex items-center justify-center">
+                  <span class="font-display text-3xl font-bold text-white/90 drop-shadow-lg">NS</span>
+                </div>
+              </div>
+            </div>
+            <div class="mt-6 text-center">
+              <h3 class="font-display text-lg font-semibold group-hover:text-cosmic-violet transition-colors">Night Soil</h3>
+              <p class="text-sm text-white/45 mt-1">EP · 2024</p>
+              <p class="text-xs text-white/30 mt-2">5 tracks · 22 min</p>
+            </div>
+          </article>
+
+          <!-- Album card 3 -->
+          <article class="reveal reveal-delay-2 disc-card group" data-planet="gold">
+            <div class="planet-card">
+              <div class="planet-sphere planet-sphere-gold">
+                <div class="planet-atmosphere"></div>
+                <div class="planet-surface flex items-center justify-center">
+                  <span class="font-display text-3xl font-bold text-white/90 drop-shadow-lg">SR</span>
+                </div>
+              </div>
+              <div class="planet-ring planet-ring-gold"></div>
+            </div>
+            <div class="mt-6 text-center">
+              <h3 class="font-display text-lg font-semibold group-hover:text-earth-amber transition-colors">Solar Roots</h3>
+              <p class="text-sm text-white/45 mt-1">LP · 2023</p>
+              <p class="text-xs text-white/30 mt-2">10 tracks · 41 min</p>
+            </div>
+          </article>
+
+          <!-- Album card 4 -->
+          <article class="reveal disc-card group" data-planet="blue">
+            <div class="planet-card">
+              <div class="planet-sphere planet-sphere-blue">
+                <div class="planet-atmosphere"></div>
+                <div class="planet-surface flex items-center justify-center">
+                  <span class="font-display text-3xl font-bold text-white/90 drop-shadow-lg">TE</span>
+                </div>
+              </div>
+            </div>
+            <div class="mt-6 text-center">
+              <h3 class="font-display text-lg font-semibold group-hover:text-cosmic-cyan transition-colors">Tidal Echoes</h3>
+              <p class="text-sm text-white/45 mt-1">EP · 2022</p>
+              <p class="text-xs text-white/30 mt-2">4 tracks · 18 min</p>
+            </div>
+          </article>
+
+          <!-- Album card 5 -->
+          <article class="reveal reveal-delay-1 disc-card group" data-planet="moss">
+            <div class="planet-card">
+              <div class="planet-sphere planet-sphere-moss">
+                <div class="planet-atmosphere"></div>
+                <div class="planet-surface flex items-center justify-center">
+                  <span class="font-display text-3xl font-bold text-white/90 drop-shadow-lg">FC</span>
+                </div>
+              </div>
+              <div class="planet-ring"></div>
+            </div>
+            <div class="mt-6 text-center">
+              <h3 class="font-display text-lg font-semibold group-hover:text-earth-green transition-colors">First Contact</h3>
+              <p class="text-sm text-white/45 mt-1">LP · 2021</p>
+              <p class="text-xs text-white/30 mt-2">9 tracks · 36 min</p>
+            </div>
+          </article>
+
+          <!-- Album card 6 -->
+          <article class="reveal reveal-delay-2 disc-card group" data-planet="void">
+            <div class="planet-card">
+              <div class="planet-sphere planet-sphere-void">
+                <div class="planet-atmosphere"></div>
+                <div class="planet-surface flex items-center justify-center">
+                  <span class="font-display text-3xl font-bold text-white/90 drop-shadow-lg">Δ</span>
+                </div>
+              </div>
+            </div>
+            <div class="mt-6 text-center">
+              <h3 class="font-display text-lg font-semibold group-hover:text-white transition-colors">Delta Dust</h3>
+              <p class="text-sm text-white/45 mt-1">Single · 2020</p>
+              <p class="text-xs text-white/30 mt-2">1 track · 4 min</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- About / Bio -->
+    <section id="about" class="relative py-24 sm:py-32 px-4 sm:px-6">
+      <div class="max-w-6xl mx-auto">
+        <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div class="reveal order-2 lg:order-1">
+            <p class="font-display text-xs tracking-[0.3em] uppercase text-earth-gold mb-3">The Story</p>
+            <h2 class="font-display text-3xl sm:text-4xl font-semibold mb-6">About Astra Terra</h2>
+            <div class="section-line mb-8"></div>
+            <div class="space-y-4 text-white/65 leading-relaxed">
+              <p>
+                Born at the seam of mountain nights and city light pollution, <strong class="text-white font-medium">Astra Terra</strong> writes music that feels like standing barefoot on wet earth while watching a meteor shower.
+              </p>
+              <p>
+                Blending acoustic strings, modular synths, and field recordings from forests and coastlines, each release maps a different latitude of the soul — grief, wonder, and the quiet insistence of growth.
+              </p>
+              <p>
+                From DIY loft shows to open-air amphitheaters, Astra Terra invites listeners into a living planetarium: intimate, luminous, and rooted in the real world.
+              </p>
+            </div>
+            <dl class="mt-10 grid grid-cols-3 gap-4">
+              <div class="stat-block">
+                <dt class="text-2xl sm:text-3xl font-display font-bold text-gradient-earth">6</dt>
+                <dd class="text-xs text-white/40 mt-1 uppercase tracking-wider">Releases</dd>
+              </div>
+              <div class="stat-block">
+                <dt class="text-2xl sm:text-3xl font-display font-bold text-gradient-cosmic">40+</dt>
+                <dd class="text-xs text-white/40 mt-1 uppercase tracking-wider">Shows</dd>
+              </div>
+              <div class="stat-block">
+                <dt class="text-2xl sm:text-3xl font-display font-bold text-earth-amber">∞</dt>
+                <dd class="text-xs text-white/40 mt-1 uppercase tracking-wider">Horizons</dd>
+              </div>
+            </dl>
+          </div>
+          <div class="reveal reveal-delay-1 order-1 lg:order-2 flex justify-center">
+            <div class="bio-visual relative w-full max-w-md aspect-square">
+              <div class="absolute inset-0 rounded-full bg-gradient-to-br from-cosmic-purple/40 via-earth-green/20 to-earth-gold/30 blur-2xl animate-pulse-glow"></div>
+              <div class="relative w-full h-full rounded-3xl overflow-hidden glass-card border border-white/10 flex items-center justify-center">
+                <div class="bio-portrait w-[85%] h-[85%] rounded-full bg-gradient-to-br from-[#1a3a2a] via-[#2d1b4e] to-[#0c1a2e] relative overflow-hidden shadow-2xl">
+                  <div class="absolute inset-0 opacity-40" style="background: radial-gradient(circle at 30% 30%, #67e8f9 0%, transparent 40%), radial-gradient(circle at 70% 60%, #eab308 0%, transparent 35%), radial-gradient(circle at 50% 80%, #22c55e 0%, transparent 40%);"></div>
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="text-center">
+                      <div class="w-20 h-20 mx-auto mb-3 rounded-full border border-white/20 bg-white/5 backdrop-blur flex items-center justify-center">
+                        <svg class="w-10 h-10 text-earth-amber/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/></svg>
+                      </div>
+                      <p class="font-display text-sm tracking-widest text-white/60">ARTIST</p>
+                    </div>
+                  </div>
+                  <!-- decorative orbit line -->
+                  <div class="absolute inset-4 rounded-full border border-dashed border-white/10 animate-orbit" style="animation-duration: 60s;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tour Dates -->
+    <section id="tour" class="relative py-24 sm:py-32 px-4 sm:px-6">
+      <div class="max-w-4xl mx-auto">
+        <div class="section-header reveal text-center mb-14">
+          <p class="font-display text-xs tracking-[0.3em] uppercase text-cosmic-cyan mb-3">Live</p>
+          <h2 class="font-display text-3xl sm:text-4xl font-semibold">Tour Dates</h2>
+          <p class="mt-3 text-white/50">Catch Astra Terra under real skies.</p>
+          <div class="section-line mx-auto mt-4"></div>
+        </div>
+
+        <ul class="space-y-3">
+          <li class="reveal tour-row glass-card rounded-2xl px-5 py-4 sm:px-6 sm:py-5 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 group hover:border-earth-gold/30 transition-colors">
+            <div class="flex items-center gap-4 sm:w-40 shrink-0">
+              <div class="date-badge">
+                <span class="month">AUG</span>
+                <span class="day">22</span>
+              </div>
+              <span class="text-xs text-white/40 sm:hidden">2026 · Portland, OR</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-medium text-white group-hover:text-earth-amber transition-colors">Crystal Ballroom</h3>
+              <p class="text-sm text-white/45">Portland, OR · USA</p>
+            </div>
+            <div class="flex items-center gap-3 sm:shrink-0">
+              <span class="text-xs px-2.5 py-1 rounded-full bg-earth-green/15 text-earth-moss border border-earth-green/20">On sale</span>
+              <a href="#" class="btn-ticket">Tickets</a>
+            </div>
+          </li>
+
+          <li class="reveal reveal-delay-1 tour-row glass-card rounded-2xl px-5 py-4 sm:px-6 sm:py-5 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 group hover:border-cosmic-violet/30 transition-colors">
+            <div class="flex items-center gap-4 sm:w-40 shrink-0">
+              <div class="date-badge">
+                <span class="month">SEP</span>
+                <span class="day">05</span>
+              </div>
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-medium text-white group-hover:text-cosmic-violet transition-colors">The Independent</h3>
+              <p class="text-sm text-white/45">San Francisco, CA · USA</p>
+            </div>
+            <div class="flex items-center gap-3 sm:shrink-0">
+              <span class="text-xs px-2.5 py-1 rounded-full bg-earth-green/15 text-earth-moss border border-earth-green/20">On sale</span>
+              <a href="#" class="btn-ticket">Tickets</a>
+            </div>
+          </li>
+
+          <li class="reveal reveal-delay-2 tour-row glass-card rounded-2xl px-5 py-4 sm:px-6 sm:py-5 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 group hover:border-cosmic-blue/30 transition-colors">
+            <div class="flex items-center gap-4 sm:w-40 shrink-0">
+              <div class="date-badge">
+                <span class="month">SEP</span>
+                <span class="day">18</span>
+              </div>
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-medium text-white group-hover:text-cosmic-cyan transition-colors">Brooklyn Steel</h3>
+              <p class="text-sm text-white/45">Brooklyn, NY · USA</p>
+            </div>
+            <div class="flex items-center gap-3 sm:shrink-0">
+              <span class="text-xs px-2.5 py-1 rounded-full bg-earth-gold/15 text-earth-amber border border-earth-gold/20">Few left</span>
+              <a href="#" class="btn-ticket">Tickets</a>
+            </div>
+          </li>
+
+          <li class="reveal tour-row glass-card rounded-2xl px-5 py-4 sm:px-6 sm:py-5 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 group hover:border-earth-green/30 transition-colors">
+            <div class="flex items-center gap-4 sm:w-40 shrink-0">
+              <div class="date-badge">
+                <span class="month">OCT</span>
+                <span class="day">03</span>
+              </div>
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-medium text-white group-hover:text-earth-moss transition-colors">Royal Festival Hall</h3>
+              <p class="text-sm text-white/45">London · UK</p>
+            </div>
+            <div class="flex items-center gap-3 sm:shrink-0">
+              <span class="text-xs px-2.5 py-1 rounded-full bg-white/5 text-white/40 border border-white/10">Soon</span>
+              <a href="#" class="btn-ticket opacity-60 pointer-events-none">Waitlist</a>
+            </div>
+          </li>
+
+          <li class="reveal reveal-delay-1 tour-row glass-card rounded-2xl px-5 py-4 sm:px-6 sm:py-5 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 group hover:border-earth-amber/30 transition-colors">
+            <div class="flex items-center gap-4 sm:w-40 shrink-0">
+              <div class="date-badge">
+                <span class="month">OCT</span>
+                <span class="day">21</span>
+              </div>
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-medium text-white group-hover:text-earth-amber transition-colors">Paradiso</h3>
+              <p class="text-sm text-white/45">Amsterdam · NL</p>
+            </div>
+            <div class="flex items-center gap-3 sm:shrink-0">
+              <span class="text-xs px-2.5 py-1 rounded-full bg-earth-green/15 text-earth-moss border border-earth-green/20">On sale</span>
+              <a href="#" class="btn-ticket">Tickets</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Gallery -->
+    <section id="gallery" class="relative py-24 sm:py-32 px-4 sm:px-6">
+      <div class="max-w-6xl mx-auto">
+        <div class="section-header reveal text-center mb-14">
+          <p class="font-display text-xs tracking-[0.3em] uppercase text-earth-moss mb-3">Visuals</p>
+          <h2 class="font-display text-3xl sm:text-4xl font-semibold">Gallery</h2>
+          <p class="mt-3 text-white/50">Stills from the road, the studio, and the sky.</p>
+          <div class="section-line mx-auto mt-4"></div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 auto-rows-[140px] sm:auto-rows-[180px] md:auto-rows-[200px]">
+          <button type="button" class="reveal gallery-item col-span-2 row-span-2 rounded-2xl overflow-hidden group" data-title="Stage lights — Portland">
+            <div class="gallery-bg gallery-bg-1"></div>
+            <div class="gallery-overlay"><span>Stage lights — Portland</span></div>
+          </button>
+          <button type="button" class="reveal reveal-delay-1 gallery-item rounded-2xl overflow-hidden group" data-title="Forest sessions">
+            <div class="gallery-bg gallery-bg-2"></div>
+            <div class="gallery-overlay"><span>Forest sessions</span></div>
+          </button>
+          <button type="button" class="reveal reveal-delay-2 gallery-item rounded-2xl overflow-hidden group" data-title="Nebula vinyl art">
+            <div class="gallery-bg gallery-bg-3"></div>
+            <div class="gallery-overlay"><span>Nebula vinyl art</span></div>
+          </button>
+          <button type="button" class="reveal gallery-item rounded-2xl overflow-hidden group" data-title="Backstage quiet">
+            <div class="gallery-bg gallery-bg-4"></div>
+            <div class="gallery-overlay"><span>Backstage quiet</span></div>
+          </button>
+          <button type="button" class="reveal reveal-delay-1 gallery-item rounded-2xl overflow-hidden group" data-title="Horizon soundcheck">
+            <div class="gallery-bg gallery-bg-5"></div>
+            <div class="gallery-overlay"><span>Horizon soundcheck</span></div>
+          </button>
+          <button type="button" class="reveal reveal-delay-2 gallery-item col-span-2 rounded-2xl overflow-hidden group" data-title="Crowd under stars">
+            <div class="gallery-bg gallery-bg-6"></div>
+            <div class="gallery-overlay"><span>Crowd under stars</span></div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter CTA -->
+    <section class="relative py-16 px-4 sm:px-6">
+      <div class="max-w-2xl mx-auto reveal text-center glass-card rounded-3xl p-8 sm:p-10 border border-white/10">
+        <h2 class="font-display text-2xl sm:text-3xl font-semibold mb-3">Join the Orbit</h2>
+        <p class="text-white/50 text-sm sm:text-base mb-6">New music, tour alerts, and rare earth transmissions. No spam — only signal.</p>
+        <form id="newsletter-form" class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" novalidate>
+          <label for="email" class="sr-only">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder="you@cosmos.earth"
+            class="flex-1 px-4 py-3 rounded-full bg-white/5 border border-white/15 text-white placeholder:text-white/30 focus:outline-none focus:border-earth-gold/50 focus:ring-1 focus:ring-earth-gold/30 transition-colors"
+          />
+          <button type="submit" class="btn-primary shrink-0 px-6">Subscribe</button>
+        </form>
+        <p id="form-message" class="mt-4 text-sm hidden" role="status"></p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="relative border-t border-white/10 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+      <div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-10">
+        <div class="text-center md:text-left">
+          <a href="#hero" class="font-display text-xl tracking-widest font-semibold">
+            ASTRA<span class="text-cosmic-violet">·</span>TERRA
+          </a>
+          <p class="mt-2 text-sm text-white/40 max-w-xs">Between the stars and the soil.</p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-6 text-sm text-white/50">
+          <a href="#music" class="hover:text-earth-amber transition-colors">Music</a>
+          <a href="#discography" class="hover:text-earth-amber transition-colors">Discography</a>
+          <a href="#about" class="hover:text-earth-amber transition-colors">About</a>
+          <a href="#tour" class="hover:text-earth-amber transition-colors">Tour</a>
+          <a href="#gallery" class="hover:text-earth-amber transition-colors">Gallery</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="https://open.spotify.com" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Spotify">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+          </a>
+          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="YouTube">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Instagram">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+          </a>
+          <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="X">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.717-8.825L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://music.apple.com" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Apple Music">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.997 6.124c0-.738-.065-1.47-.19-2.19-.494-2.801-2.427-4.72-5.23-5.19C17.662.62 16.037.5 14.5.5h-5c-1.537 0-3.162.12-4.077.244-2.803.47-4.736 2.389-5.23 5.19C.065 4.654 0 5.386 0 6.124v11.752c0 .738.065 1.47.193 2.19.494 2.801 2.427 4.72 5.23 5.19.915.124 2.54.244 4.077.244h5c1.537 0 3.162-.12 4.077-.244 2.803-.47 4.736-2.389 5.23-5.19.125-.72.19-1.452.19-2.19V6.124zM15.5 17.5c0 1.38-1.567 2.5-3.5 2.5s-3.5-1.12-3.5-2.5 1.567-2.5 3.5-2.5 3.5 1.12 3.5 2.5zm1-8.5v7.5h-2v-5.5l-4 1.2V17.5h-2V7.8l6-1.8v3z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="mt-12 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/30">
+        <p>&copy; <span id="year"></span> Astra Terra. All rights reserved.</p>
+        <p class="tracking-wide">Crafted with stars &amp; soil</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Gallery lightbox -->
+  <div id="lightbox" class="lightbox hidden" role="dialog" aria-modal="true" aria-label="Image preview">
+    <button type="button" id="lightbox-close" class="lightbox-close" aria-label="Close">&times;</button>
+    <div class="lightbox-content">
+      <div id="lightbox-visual" class="lightbox-visual"></div>
+      <p id="lightbox-caption" class="lightbox-caption"></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

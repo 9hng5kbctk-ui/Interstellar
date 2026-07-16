@@ -1,0 +1,717 @@
+/* ============================================
+   Astra Terra — Space + Earth custom styles
+   ============================================ */
+
+:root {
+  --space-void: #050508;
+  --space-deep: #0a0a12;
+  --purple: #7c3aed;
+  --violet: #a78bfa;
+  --blue: #3b82f6;
+  --cyan: #67e8f9;
+  --green: #22c55e;
+  --moss: #4ade80;
+  --gold: #eab308;
+  --amber: #fbbf24;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--space-void);
+  min-height: 100vh;
+}
+
+/* ----- Starfield canvas ----- */
+#starfield {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ----- Cosmic background layers ----- */
+.cosmic-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.nebula {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.45;
+  will-change: transform;
+}
+
+.nebula-1 {
+  width: min(70vw, 600px);
+  height: min(70vw, 600px);
+  top: -10%;
+  right: -10%;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.55) 0%, rgba(59, 130, 246, 0.2) 45%, transparent 70%);
+  animation: nebulaDrift 25s ease-in-out infinite alternate;
+}
+
+.nebula-2 {
+  width: min(60vw, 500px);
+  height: min(60vw, 500px);
+  bottom: 10%;
+  left: -15%;
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.35) 0%, rgba(234, 179, 8, 0.15) 40%, transparent 70%);
+  animation: nebulaDrift 30s ease-in-out infinite alternate-reverse;
+}
+
+.nebula-3 {
+  width: min(50vw, 400px);
+  height: min(50vw, 400px);
+  top: 45%;
+  right: 20%;
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.3) 0%, rgba(103, 232, 249, 0.1) 50%, transparent 70%);
+  animation: nebulaDrift 20s ease-in-out infinite alternate;
+}
+
+@keyframes nebulaDrift {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(30px, -20px) scale(1.08); }
+}
+
+/* Decorative background planets */
+.planet {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
+.planet-earth {
+  width: 120px;
+  height: 120px;
+  bottom: 15%;
+  right: 8%;
+  background:
+    radial-gradient(circle at 35% 35%, #86efac, transparent 40%),
+    radial-gradient(circle at 60% 60%, #1e3a8a, #14532d 50%, #0c1a12 100%);
+  box-shadow:
+    inset -12px -8px 30px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(34, 197, 94, 0.25);
+}
+
+.planet-purple {
+  width: 70px;
+  height: 70px;
+  top: 25%;
+  left: 6%;
+  background:
+    radial-gradient(circle at 30% 30%, #c4b5fd, transparent 45%),
+    radial-gradient(circle at 70% 70%, #5b21b6, #1e1b4b);
+  box-shadow:
+    inset -8px -6px 20px rgba(0, 0, 0, 0.45),
+    0 0 30px rgba(124, 58, 237, 0.3);
+  animation-delay: -3s;
+}
+
+.planet-gold {
+  width: 40px;
+  height: 40px;
+  top: 60%;
+  left: 18%;
+  background:
+    radial-gradient(circle at 35% 30%, #fef08a, transparent 50%),
+    radial-gradient(circle, #ca8a04, #713f12);
+  box-shadow: 0 0 20px rgba(234, 179, 8, 0.35);
+  opacity: 0.4;
+  animation: float 10s ease-in-out infinite;
+  animation-delay: -5s;
+}
+
+.ring-system {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  bottom: 12%;
+  right: 5%;
+  border: 1px solid rgba(234, 179, 8, 0.15);
+  border-radius: 50%;
+  transform: rotateX(70deg) rotateZ(-20deg);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.ring-system::before {
+  content: '';
+  position: absolute;
+  inset: 15px;
+  border: 1px solid rgba(167, 139, 250, 0.12);
+  border-radius: 50%;
+}
+
+/* Keep content above background */
+main,
+header,
+footer,
+.lightbox {
+  position: relative;
+  z-index: 1;
+}
+
+/* ----- Header ----- */
+#site-header {
+  background: transparent;
+}
+
+#site-header.scrolled {
+  background: rgba(10, 10, 18, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* ----- Typography gradients ----- */
+.text-gradient-cosmic {
+  background: linear-gradient(135deg, #e0e7ff 0%, #a78bfa 40%, #67e8f9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-gradient-earth {
+  background: linear-gradient(135deg, #86efac 0%, #eab308 50%, #fbbf24 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ----- Buttons ----- */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 1.75rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  background: linear-gradient(135deg, #7c3aed 0%, #16a34a 100%);
+  color: white;
+  box-shadow: 0 8px 30px rgba(124, 58, 237, 0.35);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.2s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(124, 58, 237, 0.45);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 1.75rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: white;
+  backdrop-filter: blur(8px);
+  transition: background 0.25s, border-color 0.25s, transform 0.25s;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(234, 179, 8, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-ticket {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1.1rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.9), rgba(22, 163, 74, 0.9));
+  color: white;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.btn-ticket:hover {
+  opacity: 0.9;
+  transform: scale(1.03);
+}
+
+/* ----- Glass cards ----- */
+.glass-card {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+/* ----- Section accents ----- */
+.section-line {
+  width: 48px;
+  height: 3px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #7c3aed, #22c55e, #eab308);
+}
+
+.chip {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ----- Player tabs ----- */
+.player-tab {
+  padding: 0.4rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.45);
+  border: 1px solid transparent;
+  background: transparent;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.player-tab:hover {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.player-tab.active {
+  color: white;
+  background: rgba(124, 58, 237, 0.25);
+  border-color: rgba(167, 139, 250, 0.35);
+}
+
+.album-art-orbit {
+  animation: spin-slow 20s linear infinite;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ----- Discography planet cards ----- */
+.disc-card {
+  cursor: default;
+  transition: transform 0.35s ease;
+}
+
+.disc-card:hover {
+  transform: translateY(-8px);
+}
+
+.planet-card {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.planet-sphere {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  overflow: hidden;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  z-index: 2;
+}
+
+.disc-card:hover .planet-sphere {
+  transform: scale(1.06);
+}
+
+.planet-atmosphere {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.planet-surface {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.planet-sphere-earth {
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.35), transparent 25%),
+    radial-gradient(ellipse at 60% 40%, #4ade80 0%, transparent 40%),
+    radial-gradient(ellipse at 30% 70%, #166534 0%, transparent 50%),
+    radial-gradient(circle at 70% 70%, #1e40af, #0f172a 80%);
+  box-shadow:
+    inset -18px -12px 35px rgba(0, 0, 0, 0.55),
+    0 0 40px rgba(34, 197, 94, 0.35);
+}
+
+.planet-sphere-purple {
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.3), transparent 30%),
+    radial-gradient(circle at 65% 55%, #a78bfa, #5b21b6 50%, #1e1b4b);
+  box-shadow:
+    inset -18px -12px 35px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(124, 58, 237, 0.4);
+}
+
+.planet-sphere-gold {
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.4), transparent 30%),
+    radial-gradient(circle at 60% 60%, #fbbf24, #a16207 55%, #451a03);
+  box-shadow:
+    inset -18px -12px 35px rgba(0, 0, 0, 0.45),
+    0 0 40px rgba(234, 179, 8, 0.4);
+}
+
+.planet-sphere-blue {
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.35), transparent 30%),
+    radial-gradient(circle at 60% 50%, #67e8f9, #1d4ed8 50%, #0c1a2e);
+  box-shadow:
+    inset -18px -12px 35px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(59, 130, 246, 0.4);
+}
+
+.planet-sphere-moss {
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.3), transparent 30%),
+    radial-gradient(circle at 50% 40%, #86efac, #15803d 45%, #052e16);
+  box-shadow:
+    inset -18px -12px 35px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(74, 222, 128, 0.35);
+}
+
+.planet-sphere-void {
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.2), transparent 30%),
+    radial-gradient(circle at 55% 55%, #4c1d95, #0f0a1a 60%, #050508);
+  box-shadow:
+    inset -18px -12px 35px rgba(0, 0, 0, 0.6),
+    0 0 35px rgba(88, 28, 135, 0.4);
+}
+
+.planet-ring {
+  position: absolute;
+  width: 170px;
+  height: 48px;
+  border: 2px solid rgba(167, 139, 250, 0.35);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotateX(72deg);
+  z-index: 1;
+  pointer-events: none;
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.2);
+}
+
+.planet-ring-gold {
+  border-color: rgba(234, 179, 8, 0.4);
+  box-shadow: 0 0 12px rgba(234, 179, 8, 0.2);
+}
+
+.disc-card:hover .planet-ring {
+  animation: ringPulse 2s ease-in-out infinite;
+}
+
+@keyframes ringPulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* ----- Tour ----- */
+.date-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(124, 58, 237, 0.25), rgba(34, 197, 94, 0.15));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.date-badge .month {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--amber);
+  font-family: 'Orbitron', system-ui, sans-serif;
+}
+
+.date-badge .day {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-family: 'Orbitron', system-ui, sans-serif;
+}
+
+.stat-block {
+  text-align: center;
+  padding: 1rem 0.5rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ----- Gallery ----- */
+.gallery-item {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  padding: 0;
+  background: transparent;
+}
+
+.gallery-bg {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.6s ease;
+}
+
+.gallery-item:hover .gallery-bg {
+  transform: scale(1.08);
+}
+
+.gallery-bg-1 {
+  background:
+    linear-gradient(135deg, rgba(124, 58, 237, 0.6), rgba(15, 23, 42, 0.8)),
+    radial-gradient(ellipse at 30% 70%, #7c3aed, #0f172a);
+}
+
+.gallery-bg-2 {
+  background:
+    linear-gradient(160deg, rgba(34, 197, 94, 0.45), rgba(5, 46, 22, 0.85)),
+    radial-gradient(circle at 60% 40%, #22c55e, #052e16);
+}
+
+.gallery-bg-3 {
+  background:
+    linear-gradient(200deg, rgba(167, 139, 250, 0.5), rgba(30, 27, 75, 0.9)),
+    radial-gradient(ellipse at 40% 50%, #a78bfa, #1e1b4b);
+}
+
+.gallery-bg-4 {
+  background:
+    linear-gradient(45deg, rgba(234, 179, 8, 0.35), rgba(69, 26, 3, 0.9)),
+    radial-gradient(circle at 70% 30%, #eab308, #451a03);
+}
+
+.gallery-bg-5 {
+  background:
+    linear-gradient(120deg, rgba(59, 130, 246, 0.5), rgba(12, 26, 46, 0.9)),
+    radial-gradient(ellipse at 50% 60%, #3b82f6, #0c1a2e);
+}
+
+.gallery-bg-6 {
+  background:
+    linear-gradient(90deg, rgba(124, 58, 237, 0.4), rgba(34, 197, 94, 0.35), rgba(234, 179, 8, 0.3)),
+    radial-gradient(ellipse at 50% 50%, #1e1b4b, #050508);
+}
+
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 1rem;
+  background: linear-gradient(to top, rgba(5, 5, 8, 0.85) 0%, transparent 55%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.gallery-item:hover .gallery-overlay,
+.gallery-item:focus-visible .gallery-overlay {
+  opacity: 1;
+}
+
+.gallery-overlay span {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.02em;
+}
+
+/* CSS-only "photo" texture lines */
+.gallery-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.12) 0%, transparent 25%),
+    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.06) 0%, transparent 20%);
+  pointer-events: none;
+}
+
+/* ----- Social ----- */
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.65);
+  transition: color 0.2s, background 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.social-btn:hover {
+  color: var(--amber);
+  background: rgba(234, 179, 8, 0.1);
+  border-color: rgba(234, 179, 8, 0.3);
+  transform: translateY(-2px);
+}
+
+/* ----- Lightbox ----- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(5, 5, 8, 0.92);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  animation: fadeIn 0.25s ease;
+}
+
+.lightbox.hidden {
+  display: none;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.5rem;
+  font-size: 2rem;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.6);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+  z-index: 2;
+}
+
+.lightbox-close:hover {
+  color: white;
+}
+
+.lightbox-content {
+  max-width: 640px;
+  width: 100%;
+  text-align: center;
+}
+
+.lightbox-visual {
+  aspect-ratio: 16 / 10;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-caption {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ----- Scroll reveal ----- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* Hero starts slightly visible for first paint */
+#hero .reveal {
+  transition-duration: 0.9s;
+}
+
+/* ----- Reduced motion ----- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .nebula,
+  .planet,
+  .album-art-orbit,
+  .animate-float,
+  .animate-float-slow,
+  .animate-pulse-glow,
+  .animate-orbit,
+  .animate-bounce {
+    animation: none !important;
+  }
+
+  .gallery-item:hover .gallery-bg {
+    transform: none;
+  }
+}
+
+/* Soft vignette for depth */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(5, 5, 8, 0.7) 100%);
+}
