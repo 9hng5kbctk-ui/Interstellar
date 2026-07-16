@@ -116,15 +116,131 @@
     }
     #enter-gate .orbit-system {
       position: relative; width: min(78vw, 320px); height: min(78vw, 320px); flex-shrink: 0;
+      overflow: visible;
     }
     #enter-gate .orbit-ring-visual {
       position: absolute; inset: 8%; border-radius: 50%;
       border: 1px solid rgba(167,139,250,.28);
       box-shadow: 0 0 40px rgba(124,58,237,.15), inset 0 0 40px rgba(34,197,94,.06);
+      z-index: 0;
     }
     #enter-gate .earth-core {
       position: absolute; top: 50%; left: 50%; width: 42%; height: 42%;
-      transform: translate(-50%, -50%); z-index: 2;
+      transform: translate(-50%, -50%); z-index: 3; /* moon goes under this when "behind" */
+    }
+
+    /* Moon: perspective flyby — shrinks behind Earth, grows large in front */
+    #enter-gate .moon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 48px;
+      height: 48px;
+      margin: -24px 0 0 -24px;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: moonFlyby 12s linear infinite;
+      will-change: transform, opacity, filter;
+      /* soft glow when in front */
+      box-shadow: 0 0 16px rgba(226, 232, 240, 0.25);
+    }
+    #enter-gate .moon-body {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 32% 28%, #f8fafc 0%, transparent 28%),
+        radial-gradient(circle at 70% 65%, #475569 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, #cbd5e1 0%, #94a3b8 40%, #64748b 70%, #334155 100%);
+      box-shadow:
+        inset -6px -4px 12px rgba(0, 0, 0, 0.55),
+        inset 3px 2px 8px rgba(255, 255, 255, 0.25);
+    }
+    /* craters */
+    #enter-gate .moon-body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 40% 45%, rgba(71, 85, 105, 0.7) 0 6%, transparent 8%),
+        radial-gradient(circle at 62% 38%, rgba(51, 65, 85, 0.65) 0 4%, transparent 6%),
+        radial-gradient(circle at 55% 62%, rgba(71, 85, 105, 0.6) 0 5%, transparent 7%),
+        radial-gradient(circle at 30% 58%, rgba(51, 65, 85, 0.55) 0 3.5%, transparent 5%),
+        radial-gradient(circle at 48% 28%, rgba(100, 116, 139, 0.5) 0 3%, transparent 5%);
+    }
+    #enter-gate .moon-body::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: linear-gradient(125deg, rgba(255,255,255,.2) 0%, transparent 40%, rgba(0,0,0,.25) 100%);
+    }
+    /*
+      Moon path (not a flat circle):
+      - behind Earth → small + dim + under Earth (z-index 1)
+      - swings out → grows
+      - in front → largest + bright + above Earth (z-index 5)
+    */
+    @keyframes moonFlyby {
+      /* tucked behind Earth */
+      0% {
+        transform: translate(4%, 6%) scale(0.35);
+        opacity: 0.3;
+        z-index: 1;
+        filter: brightness(0.5) blur(0.4px);
+      }
+      /* still behind, drifting right */
+      12% {
+        transform: translate(28%, 2%) scale(0.42);
+        opacity: 0.4;
+        z-index: 1;
+        filter: brightness(0.55);
+      }
+      /* peeks out on the right — starts growing */
+      28% {
+        transform: translate(78%, -18%) scale(0.72);
+        opacity: 0.85;
+        z-index: 5;
+        filter: brightness(0.9);
+      }
+      /* sweeping in front — BIGGEST */
+      50% {
+        transform: translate(0%, -52%) scale(1.35);
+        opacity: 1;
+        z-index: 5;
+        filter: brightness(1.15);
+      }
+      /* still in front, moving left */
+      68% {
+        transform: translate(-78%, -12%) scale(0.85);
+        opacity: 0.95;
+        z-index: 5;
+        filter: brightness(1);
+      }
+      /* sliding back behind on the left */
+      85% {
+        transform: translate(-30%, 4%) scale(0.45);
+        opacity: 0.4;
+        z-index: 1;
+        filter: brightness(0.55);
+      }
+      /* hidden behind again */
+      100% {
+        transform: translate(4%, 6%) scale(0.35);
+        opacity: 0.3;
+        z-index: 1;
+        filter: brightness(0.5) blur(0.4px);
+      }
+    }
+    @media (max-width: 400px) {
+      #enter-gate .moon {
+        width: 36px;
+        height: 36px;
+        margin: -18px 0 0 -18px;
+      }
     }
     #enter-gate .earth-glow {
       position: absolute; inset: -35%; border-radius: 50%;
@@ -175,8 +291,9 @@
       pointer-events: none;
     }
     #enter-gate .orbit-track {
-      position: absolute; inset: 0; z-index: 3;
+      position: absolute; inset: 0; z-index: 4;
       animation: egOrbit 14s linear infinite;
+      pointer-events: none;
     }
     @keyframes egOrbit { to { transform: rotate(360deg); } }
     #enter-gate .orbit-spaceman {
@@ -290,6 +407,12 @@
           </div>
           <div class="earth-atmosphere"></div>
         </div>
+
+        <!-- Moon: goes behind Earth (small), then swings around large in front -->
+        <div class="moon" aria-hidden="true">
+          <div class="moon-body"></div>
+        </div>
+
         <div class="orbit-track">
           <div class="orbit-spaceman">
             <div class="orbit-spaceman-face">
