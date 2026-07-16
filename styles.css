@@ -715,3 +715,66 @@ body::before {
   pointer-events: none;
   background: radial-gradient(ellipse at center, transparent 40%, rgba(5, 5, 8, 0.7) 100%);
 }
+
+/* ----- Cursor-following spaceman ----- */
+.spaceman {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 56px;
+  height: 70px;
+  margin-left: -10px;
+  margin-top: -10px;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform;
+  transition: opacity 0.35s ease;
+}
+
+.spaceman.is-active {
+  opacity: 1;
+}
+
+.spaceman-inner {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 10px rgba(167, 139, 250, 0.55))
+    drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+  transform-origin: 50% 60%;
+  animation: spacemanBob 2.4s ease-in-out infinite;
+}
+
+.spaceman-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.spaceman-thrust {
+  animation: thrustPulse 0.35s ease-in-out infinite alternate;
+  transform-origin: 32px 64px;
+}
+
+@keyframes spacemanBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes thrustPulse {
+  from { opacity: 0.55; transform: scaleY(0.85); }
+  to { opacity: 1; transform: scaleY(1.15); }
+}
+
+/* Hide on touch / coarse pointers (phones, tablets) */
+@media (hover: none), (pointer: coarse) {
+  .spaceman {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spaceman {
+    display: none !important;
+  }
+}

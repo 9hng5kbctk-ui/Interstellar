@@ -1,5 +1,5 @@
 /**
- * Astra Terra — interactions, starfield, scroll effects
+ * Interstellar — interactions, starfield, scroll effects, spaceman cursor
  */
 
 (function () {
@@ -8,6 +8,81 @@
   // ----- Year in footer -----
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
+  // ----- Spaceman follows cursor (smooth lag) -----
+  (function initSpaceman() {
+    const el = document.getElementById('spaceman');
+    if (!el) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const coarse = window.matchMedia('(pointer: coarse)').matches;
+    const noHover = window.matchMedia('(hover: none)').matches;
+    if (reduceMotion || coarse || noHover) {
+      el.style.display = 'none';
+      return;
+    }
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let x = mouseX;
+    let y = mouseY;
+    let active = false;
+    let rafId = null;
+    const ease = 0.12; // lower = more floaty lag
+    const offsetX = 18; // sit slightly beside the cursor
+    const offsetY = 18;
+
+    function onMove(e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (!active) {
+        active = true;
+        el.classList.add('is-active');
+        x = mouseX;
+        y = mouseY;
+      }
+    }
+
+    function onLeave() {
+      active = false;
+      el.classList.remove('is-active');
+    }
+
+    function tick() {
+      x += (mouseX - x) * ease;
+      y += (mouseY - y) * ease;
+
+      const dx = mouseX - x;
+      const tilt = Math.max(-18, Math.min(18, dx * 0.08));
+      const face = dx < -2 ? -1 : 1;
+
+      el.style.transform =
+        'translate3d(' +
+        (x + offsetX) +
+        'px, ' +
+        (y + offsetY) +
+        'px, 0) rotate(' +
+        tilt +
+        'deg) scaleX(' +
+        face +
+        ')';
+
+      rafId = requestAnimationFrame(tick);
+    }
+
+    window.addEventListener('mousemove', onMove, { passive: true });
+    document.addEventListener('mouseleave', onLeave);
+    rafId = requestAnimationFrame(tick);
+
+    // Cleanup not required for single-page, but avoid leaks if script re-run
+    window.addEventListener(
+      'beforeunload',
+      function () {
+        if (rafId) cancelAnimationFrame(rafId);
+      },
+      { once: true }
+    );
+  })();
 
   // ----- Header scroll state -----
   const header = document.getElementById('site-header');
