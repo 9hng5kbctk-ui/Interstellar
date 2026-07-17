@@ -66,7 +66,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <!-- CRITICAL: entrance styles inlined so the gate never falls apart if styles.css fails to load -->
   <style id="entrance-critical-css">
@@ -155,37 +155,83 @@
       box-shadow: 0 0 10px rgba(244, 114, 182, 0.5);
     }
     /*
-      Clear pink message — fixed, centered ABOVE the Earth
-      (not on the star trail, not blurry)
+      Full-page soft cloud words — background grid:
+      EVERYTHING (top) · IS (middle) · LOVE (bottom)
+      Sits BEHIND Earth / enter box so it never looks messy
     */
     #enter-gate .love-message {
       position: absolute;
-      left: 50%;
-      top: max(12vh, 4.5rem);
-      transform: translateX(-50%);
-      z-index: 6;
-      width: min(92vw, 520px);
+      inset: 0;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      align-items: center;
+      padding: 6vh 1rem 8vh;
       margin: 0;
-      padding: 0 1rem;
-      text-align: center;
       pointer-events: none;
-      font-family: Outfit, system-ui, sans-serif;
-      font-size: clamp(1.15rem, 4.2vw, 1.75rem);
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      line-height: 1.35;
-      text-transform: lowercase;
-      color: #f9a8d4;
-      -webkit-text-fill-color: #f9a8d4;
-      text-shadow:
-        0 0 1px #fff,
-        0 0 12px rgba(244, 114, 182, 0.95),
-        0 0 28px rgba(236, 72, 153, 0.65);
       opacity: 0;
-      transition: opacity 0.55s ease;
+      transition: opacity 0.9s ease;
     }
     #enter-gate .love-message.is-visible {
       opacity: 1;
+    }
+    #enter-gate .love-line {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      padding: 0 0.5rem;
+      text-align: center;
+      font-family: Fredoka, "Segoe UI Rounded", system-ui, sans-serif;
+      font-weight: 600;
+      font-size: clamp(2.4rem, 11vw, 5.75rem);
+      line-height: 1;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(251, 182, 206, 0.38);
+      -webkit-text-fill-color: rgba(251, 182, 206, 0.38);
+      /* Soft cloud / bubble feel — no hard blur on the letter shapes */
+      text-shadow:
+        0 0 1px rgba(255, 255, 255, 0.35),
+        0 2px 0 rgba(255, 255, 255, 0.12),
+        0 0 24px rgba(244, 114, 182, 0.35),
+        0 0 48px rgba(236, 72, 153, 0.22),
+        0 8px 28px rgba(244, 114, 182, 0.18);
+      opacity: 0;
+      transform: translateY(12px) scale(0.96);
+      transition:
+        opacity 0.85s ease,
+        transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    /* Middle word a touch smaller so the grid feels balanced */
+    #enter-gate .love-line.love-is {
+      font-size: clamp(2rem, 9vw, 4.5rem);
+      letter-spacing: 0.28em;
+    }
+    #enter-gate .love-message.is-visible .love-line {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    /* Stagger so they settle in like soft clouds, top → bottom */
+    #enter-gate .love-message.is-visible .love-everything {
+      transition-delay: 0.05s;
+    }
+    #enter-gate .love-message.is-visible .love-is {
+      transition-delay: 0.22s;
+    }
+    #enter-gate .love-message.is-visible .love-love {
+      transition-delay: 0.4s;
+    }
+    #enter-gate .love-message:not(.is-visible) .love-line {
+      transition-delay: 0s;
+    }
+    /* Keep main UI clearly above the cloud words */
+    #enter-gate .gate-stage {
+      z-index: 4 !important;
+    }
+    #enter-gate .shoot-layer {
+      z-index: 5 !important;
     }
     #enter-gate .gate-vignette {
       position: absolute; inset: 0; z-index: 1; pointer-events: none;
@@ -443,8 +489,12 @@
     <div class="shoot-layer" id="shoot-layer" aria-hidden="true">
       <div class="shoot-star" id="loop-star" aria-hidden="true"></div>
     </div>
-    <!-- Clear pink text, centered above Earth — revealed by the shooting star -->
-    <p class="love-message" id="love-message" aria-hidden="true">everything is love</p>
+    <!-- Soft cloud words across the whole page (background grid) — revealed by the star -->
+    <div class="love-message" id="love-message" aria-hidden="true">
+      <span class="love-line love-everything">EVERYTHING</span>
+      <span class="love-line love-is">IS</span>
+      <span class="love-line love-love">LOVE</span>
+    </div>
     <div class="gate-vignette" aria-hidden="true"></div>
     <div class="gate-nebula gate-nebula-a" aria-hidden="true"></div>
     <div class="gate-nebula gate-nebula-b" aria-hidden="true"></div>
@@ -650,11 +700,11 @@
         loveMsg.classList.add('is-visible');
         loveMsg.setAttribute('aria-hidden', 'false');
         if (hideMsgTimer) clearTimeout(hideMsgTimer);
-        // Stay readable for a few seconds, then soft fade (no blur)
+        // Cloud words stay a moment, then soft fade — still behind Earth / UI
         hideMsgTimer = setTimeout(function () {
           loveMsg.classList.remove('is-visible');
           loveMsg.setAttribute('aria-hidden', 'true');
-        }, 4200);
+        }, 5200);
       }
 
       function flyOnce(done) {
