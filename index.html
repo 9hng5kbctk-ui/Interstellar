@@ -208,12 +208,15 @@
       top: max(1.25rem, 2.5vh);
       transform: translate(-50%, 10px) scale(0.96);
     }
-    /* BETWEEN Earth and the enter / login box */
+    /*
+      IS — parked just ABOVE the enter box (top set by JS from the box position).
+      Uses translate(-50%, -100%) so the whole word sits clear of the box, not on it.
+    */
     #enter-gate .love-line.love-is {
-      top: 56%;
-      font-size: clamp(1.6rem, 7vw, 3.25rem);
+      top: 0; /* overwritten by JS */
+      font-size: clamp(1.45rem, 6.5vw, 2.75rem);
       letter-spacing: 0.32em;
-      transform: translate(-50%, -50%) scale(0.96);
+      transform: translate(-50%, calc(-100% - 6px)) scale(0.96);
     }
     /* BOTTOM of the screen */
     #enter-gate .love-line.love-love {
@@ -229,7 +232,7 @@
       transition-delay: 0.05s;
     }
     #enter-gate .love-message.is-visible .love-is {
-      transform: translate(-50%, -50%) scale(1);
+      transform: translate(-50%, calc(-100% - 10px)) scale(1);
       transition-delay: 0.2s;
     }
     #enter-gate .love-message.is-visible .love-love {
@@ -246,20 +249,14 @@
     #enter-gate .shoot-layer {
       z-index: 7 !important;
     }
-    /* On short screens, tuck IS a bit lower so it sits in the real gap */
-    @media (max-height: 720px) {
-      #enter-gate .love-line.love-is {
-        top: 58%;
-      }
-      #enter-gate .love-line {
-        font-size: clamp(1.5rem, 7.5vw, 3rem);
-      }
-    }
     @media (max-width: 420px) {
       #enter-gate .love-line.love-everything,
       #enter-gate .love-line.love-love {
         letter-spacing: 0.08em;
         font-size: clamp(1.45rem, 9vw, 2.4rem);
+      }
+      #enter-gate .love-line.love-is {
+        font-size: clamp(1.3rem, 7vw, 2rem);
       }
     }
     #enter-gate .gate-vignette {
@@ -279,12 +276,23 @@
     }
     #enter-gate .gate-stage {
       position: relative; z-index: 2; min-height: 100%;
+      width: 100%;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: clamp(1.25rem, 4vh, 2.5rem); padding: 2rem 1rem 3rem; box-sizing: border-box;
+      gap: clamp(1.25rem, 4vh, 2.5rem);
+      padding: 2rem 1rem 3rem;
+      box-sizing: border-box;
     }
+    /* True horizontal center for Earth (same axis as the cloud words) */
     #enter-gate .orbit-system {
-      position: relative; width: min(78vw, 320px); height: min(78vw, 320px); flex-shrink: 0;
+      position: relative;
+      width: min(78vw, 320px);
+      height: min(78vw, 320px);
+      flex-shrink: 0;
       overflow: visible;
+      margin-left: auto;
+      margin-right: auto;
+      left: 0;
+      right: 0;
     }
     #enter-gate .orbit-ring-visual {
       position: absolute; inset: 8%; border-radius: 50%;
@@ -293,18 +301,23 @@
       z-index: 0;
     }
     #enter-gate .earth-core {
-      position: absolute; top: 50%; left: 50%; width: 42%; height: 42%;
-      transform: translate(-50%, -50%); z-index: 3; /* moon goes under this when "behind" */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 42%;
+      height: 42%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
     }
 
-    /* Moon orbital path (ellipse drawn under everything) */
+    /* Moon orbital path — centered, no tilt (tilt made Earth look off-center) */
     #enter-gate .moon-path {
       position: absolute;
       top: 50%;
       left: 50%;
       width: 88%;
       height: 28%;
-      transform: translate(-50%, -50%) rotate(-8deg);
+      transform: translate(-50%, -50%);
       border: 1px dashed rgba(226, 232, 240, 0.18);
       border-radius: 50%;
       z-index: 0;
@@ -431,6 +444,8 @@
     #enter-gate .orbit-spaceman-face svg { width: 52px; height: 64px; display: block; }
     #enter-gate .enter-box {
       position: relative; z-index: 4; width: min(92vw, 420px);
+      margin-left: auto;
+      margin-right: auto;
       padding: 1.75rem 1.5rem 1.5rem; text-align: center;
       border-radius: 1.25rem;
       background: linear-gradient(160deg, rgba(255,255,255,.1), rgba(15,15,30,.65));
@@ -724,17 +739,36 @@
         return u * u * p0 + 2 * u * t * p1 + t * t * p2;
       }
 
+      function placeIsAboveBox() {
+        var isEl = loveMsg && loveMsg.querySelector('.love-is');
+        var box = document.getElementById('enter-box');
+        if (!isEl || !box || !gate) return;
+        var br = box.getBoundingClientRect();
+        var gr = gate.getBoundingClientRect();
+        // Pin IS to the top edge of the enter box, then CSS pulls it fully above
+        var topPx = br.top - gr.top;
+        isEl.style.top = topPx + 'px';
+        isEl.style.left = '50%';
+      }
+
       function showLoveMessage() {
         if (!loveMsg) return;
+        placeIsAboveBox();
         loveMsg.classList.add('is-visible');
         loveMsg.setAttribute('aria-hidden', 'false');
         if (hideMsgTimer) clearTimeout(hideMsgTimer);
-        // Cloud words stay a moment, then soft fade — still behind Earth / UI
+        // Cloud words stay a moment, then soft fade
         hideMsgTimer = setTimeout(function () {
           loveMsg.classList.remove('is-visible');
           loveMsg.setAttribute('aria-hidden', 'true');
         }, 5200);
       }
+
+      window.addEventListener('resize', function () {
+        placeIsAboveBox();
+      });
+      // Position ready before first star pass
+      requestAnimationFrame(placeIsAboveBox);
 
       function flyOnce(done) {
         if (gate.classList.contains('is-hidden') || gate.classList.contains('is-leaving')) {
