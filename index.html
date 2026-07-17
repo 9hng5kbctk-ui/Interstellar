@@ -155,83 +155,112 @@
       box-shadow: 0 0 10px rgba(244, 114, 182, 0.5);
     }
     /*
-      Full-page soft cloud words — background grid:
-      EVERYTHING (top) · IS (middle) · LOVE (bottom)
-      Sits BEHIND Earth / enter box so it never looks messy
+      Cloud words in the EMPTY gaps (always visible when active):
+      EVERYTHING → very top of screen
+      IS         → gap between Earth and enter box
+      LOVE       → very bottom of screen
     */
     #enter-gate .love-message {
       position: absolute;
       inset: 0;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-evenly;
-      align-items: center;
-      padding: 6vh 1rem 8vh;
+      z-index: 6; /* above Earth/UI so words aren't buried */
       margin: 0;
-      pointer-events: none;
+      padding: 0;
+      pointer-events: none; /* Enter button still clickable underneath */
       opacity: 0;
-      transition: opacity 0.9s ease;
+      transition: opacity 0.7s ease;
     }
     #enter-gate .love-message.is-visible {
       opacity: 1;
     }
     #enter-gate .love-line {
-      display: block;
-      width: 100%;
-      max-width: 100%;
+      position: absolute;
+      left: 50%;
+      width: max-content;
+      max-width: 96vw;
       margin: 0;
-      padding: 0 0.5rem;
+      padding: 0 0.75rem;
+      box-sizing: border-box;
       text-align: center;
       font-family: Fredoka, "Segoe UI Rounded", system-ui, sans-serif;
       font-weight: 600;
-      font-size: clamp(2.4rem, 11vw, 5.75rem);
-      line-height: 1;
-      letter-spacing: 0.14em;
+      font-size: clamp(1.85rem, 8.5vw, 4.25rem);
+      line-height: 1.05;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: rgba(251, 182, 206, 0.38);
-      -webkit-text-fill-color: rgba(251, 182, 206, 0.38);
-      /* Soft cloud / bubble feel — no hard blur on the letter shapes */
+      white-space: nowrap;
+      color: #fbcfe8;
+      -webkit-text-fill-color: #fbcfe8;
+      /* Bubbly cloud glow — still sharp enough to read */
       text-shadow:
-        0 0 1px rgba(255, 255, 255, 0.35),
-        0 2px 0 rgba(255, 255, 255, 0.12),
-        0 0 24px rgba(244, 114, 182, 0.35),
-        0 0 48px rgba(236, 72, 153, 0.22),
-        0 8px 28px rgba(244, 114, 182, 0.18);
+        0 0 2px rgba(255, 255, 255, 0.85),
+        0 1px 0 rgba(255, 255, 255, 0.35),
+        0 0 18px rgba(244, 114, 182, 0.85),
+        0 0 36px rgba(236, 72, 153, 0.55),
+        0 0 60px rgba(244, 114, 182, 0.3);
       opacity: 0;
-      transform: translateY(12px) scale(0.96);
       transition:
-        opacity 0.85s ease,
-        transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+        opacity 0.75s ease,
+        transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    /* Middle word a touch smaller so the grid feels balanced */
+    /* TOP of the screen */
+    #enter-gate .love-line.love-everything {
+      top: max(1.25rem, 2.5vh);
+      transform: translate(-50%, 10px) scale(0.96);
+    }
+    /* BETWEEN Earth and the enter / login box */
     #enter-gate .love-line.love-is {
-      font-size: clamp(2rem, 9vw, 4.5rem);
-      letter-spacing: 0.28em;
+      top: 56%;
+      font-size: clamp(1.6rem, 7vw, 3.25rem);
+      letter-spacing: 0.32em;
+      transform: translate(-50%, -50%) scale(0.96);
+    }
+    /* BOTTOM of the screen */
+    #enter-gate .love-line.love-love {
+      top: auto;
+      bottom: max(1.25rem, 2.5vh);
+      transform: translate(-50%, 10px) scale(0.96);
     }
     #enter-gate .love-message.is-visible .love-line {
       opacity: 1;
-      transform: translateY(0) scale(1);
     }
-    /* Stagger so they settle in like soft clouds, top → bottom */
     #enter-gate .love-message.is-visible .love-everything {
+      transform: translate(-50%, 0) scale(1);
       transition-delay: 0.05s;
     }
     #enter-gate .love-message.is-visible .love-is {
-      transition-delay: 0.22s;
+      transform: translate(-50%, -50%) scale(1);
+      transition-delay: 0.2s;
     }
     #enter-gate .love-message.is-visible .love-love {
-      transition-delay: 0.4s;
+      transform: translate(-50%, 0) scale(1);
+      transition-delay: 0.35s;
     }
     #enter-gate .love-message:not(.is-visible) .love-line {
       transition-delay: 0s;
     }
-    /* Keep main UI clearly above the cloud words */
+    /* Stage stays below the words; star can fly over */
     #enter-gate .gate-stage {
       z-index: 4 !important;
     }
     #enter-gate .shoot-layer {
-      z-index: 5 !important;
+      z-index: 7 !important;
+    }
+    /* On short screens, tuck IS a bit lower so it sits in the real gap */
+    @media (max-height: 720px) {
+      #enter-gate .love-line.love-is {
+        top: 58%;
+      }
+      #enter-gate .love-line {
+        font-size: clamp(1.5rem, 7.5vw, 3rem);
+      }
+    }
+    @media (max-width: 420px) {
+      #enter-gate .love-line.love-everything,
+      #enter-gate .love-line.love-love {
+        letter-spacing: 0.08em;
+        font-size: clamp(1.45rem, 9vw, 2.4rem);
+      }
     }
     #enter-gate .gate-vignette {
       position: absolute; inset: 0; z-index: 1; pointer-events: none;
