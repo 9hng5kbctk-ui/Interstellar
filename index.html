@@ -94,6 +94,144 @@
       width: 100% !important; height: 100% !important;
       display: block !important; z-index: 0 !important;
     }
+    /* Soft full-page wash when a shooting star crosses */
+    #enter-gate .shoot-page-glow {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0;
+      background:
+        radial-gradient(ellipse at 50% 40%, rgba(255, 250, 240, 0.22) 0%, transparent 55%),
+        radial-gradient(ellipse at 30% 20%, rgba(253, 224, 71, 0.12) 0%, transparent 45%),
+        linear-gradient(135deg, rgba(255,255,255,0.06), transparent 50%, rgba(167,139,250,0.08));
+      transition: opacity 0.15s ease-out;
+    }
+    #enter-gate .shoot-page-glow.is-on {
+      opacity: 1;
+      transition: opacity 0.35s ease-in;
+    }
+    #enter-gate .shoot-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    /* One shooting star instance */
+    #enter-gate .shoot-star {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+    #enter-gate .shoot-star.is-flying {
+      animation: shootFly 1.85s cubic-bezier(0.33, 0, 0.2, 1) forwards;
+    }
+    #enter-gate .shoot-head {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      margin: -5px 0 0 -5px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow:
+        0 0 8px 3px rgba(255, 255, 255, 0.95),
+        0 0 24px 10px rgba(253, 224, 71, 0.75),
+        0 0 48px 18px rgba(167, 139, 250, 0.45);
+    }
+    #enter-gate .shoot-streak {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 160px;
+      height: 2px;
+      transform-origin: right center;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(167, 139, 250, 0.15) 20%,
+        rgba(253, 224, 71, 0.55) 55%,
+        rgba(255, 255, 255, 0.95) 100%
+      );
+      filter: blur(0.4px);
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+    }
+    /* Words left in the trail — fade out like a real meteor trail */
+    #enter-gate .shoot-words {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+      gap: 0.28em;
+      white-space: nowrap;
+      font-family: Orbitron, system-ui, sans-serif;
+      font-size: clamp(0.55rem, 1.6vw, 0.8rem);
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: lowercase;
+      color: rgba(255, 255, 255, 0.92);
+      text-shadow:
+        0 0 8px rgba(253, 224, 71, 0.9),
+        0 0 18px rgba(167, 139, 250, 0.7),
+        0 0 28px rgba(255, 255, 255, 0.4);
+      transform: translate(-100%, -50%) rotate(-28deg);
+      transform-origin: right center;
+      pointer-events: none;
+    }
+    #enter-gate .shoot-words span {
+      display: inline-block;
+      opacity: 0;
+    }
+    #enter-gate .shoot-star.is-flying .shoot-words span {
+      animation: shootLetter 1.85s ease-out forwards;
+    }
+    /* stagger each letter so the phrase unfurls then dies like a trail */
+    #enter-gate .shoot-words span:nth-child(1)  { animation-delay: 0.05s; }
+    #enter-gate .shoot-words span:nth-child(2)  { animation-delay: 0.1s; }
+    #enter-gate .shoot-words span:nth-child(3)  { animation-delay: 0.14s; }
+    #enter-gate .shoot-words span:nth-child(4)  { animation-delay: 0.18s; }
+    #enter-gate .shoot-words span:nth-child(5)  { animation-delay: 0.22s; }
+    #enter-gate .shoot-words span:nth-child(6)  { animation-delay: 0.26s; }
+    #enter-gate .shoot-words span:nth-child(7)  { animation-delay: 0.3s; }
+    #enter-gate .shoot-words span:nth-child(8)  { animation-delay: 0.34s; }
+    #enter-gate .shoot-words span:nth-child(9)  { animation-delay: 0.38s; }
+    #enter-gate .shoot-words span:nth-child(10) { animation-delay: 0.42s; }
+    #enter-gate .shoot-words span:nth-child(11) { animation-delay: 0.46s; }
+    #enter-gate .shoot-words span:nth-child(12) { animation-delay: 0.5s; }
+    #enter-gate .shoot-words span:nth-child(13) { animation-delay: 0.54s; }
+    #enter-gate .shoot-words span:nth-child(14) { animation-delay: 0.58s; }
+    #enter-gate .shoot-words span:nth-child(15) { animation-delay: 0.62s; }
+    #enter-gate .shoot-words span:nth-child(16) { animation-delay: 0.66s; }
+    #enter-gate .shoot-words span:nth-child(17) { animation-delay: 0.7s; }
+    #enter-gate .shoot-words span:nth-child(18) { animation-delay: 0.74s; }
+    #enter-gate .shoot-words span:nth-child(19) { animation-delay: 0.78s; }
+    @keyframes shootLetter {
+      0%   { opacity: 0; transform: translateY(4px) scale(0.9); filter: blur(2px); }
+      12%  { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+      45%  { opacity: 0.95; }
+      100% { opacity: 0; transform: translateY(-2px) scale(0.98); filter: blur(3px); }
+    }
+    /* Path set via CSS vars --sx --sy --ex --ey from JS */
+    @keyframes shootFly {
+      0% {
+        opacity: 0;
+        transform: translate(var(--sx), var(--sy)) scale(0.7);
+      }
+      6% {
+        opacity: 1;
+      }
+      70% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--ex), var(--ey)) scale(1.05);
+      }
+    }
     #enter-gate .gate-vignette {
       position: absolute; inset: 0; z-index: 1; pointer-events: none;
       background: radial-gradient(ellipse at center, transparent 15%, rgba(0,0,0,.8) 100%);
@@ -346,6 +484,8 @@
   <!-- Immersive space entrance (styles are INLINE above — works even without styles.css) -->
   <div id="enter-gate" class="enter-gate" role="dialog" aria-modal="true" aria-labelledby="enter-title">
     <canvas id="gate-stars" class="gate-stars" aria-hidden="true"></canvas>
+    <div class="shoot-page-glow" id="shoot-page-glow" aria-hidden="true"></div>
+    <div class="shoot-layer" id="shoot-layer" aria-hidden="true"></div>
     <div class="gate-vignette" aria-hidden="true"></div>
     <div class="gate-nebula gate-nebula-a" aria-hidden="true"></div>
     <div class="gate-nebula gate-nebula-b" aria-hidden="true"></div>
@@ -523,6 +663,114 @@
       }
       moonRaf = requestAnimationFrame(orbitMoon);
     }
+
+    // Shooting star every ~10s — soft page glow + trail text "everything is love"
+    (function initShootingStars() {
+      var layer = document.getElementById('shoot-layer');
+      var pageGlow = document.getElementById('shoot-page-glow');
+      if (!layer) return;
+
+      var PHRASE = 'everything is love';
+      var INTERVAL_MS = 10000;
+      var timer = null;
+
+      function buildLetterSpans(text) {
+        var html = '';
+        for (var i = 0; i < text.length; i++) {
+          var ch = text.charAt(i);
+          // keep spaces as visible gaps
+          if (ch === ' ') {
+            html += '<span style="width:0.45em">&nbsp;</span>';
+          } else {
+            html += '<span>' + ch + '</span>';
+          }
+        }
+        return html;
+      }
+
+      function fire() {
+        if (gate.classList.contains('is-hidden') || gate.classList.contains('is-leaving')) {
+          return;
+        }
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+
+        /*
+          Classic meteor: falls steeply DOWN the sky (not a flat left→right sweep).
+          Starts near the top, ends much lower, with only a modest horizontal drift.
+        */
+        var startX = (0.12 + Math.random() * 0.76) * w; // anywhere across the top
+        var startY = (-0.08 + Math.random() * 0.12) * h; // just above / top of screen
+        // Fall mostly downward; slight left OR right lean (steep angle)
+        var lean = (Math.random() > 0.5 ? 1 : -1) * (0.12 + Math.random() * 0.22) * w;
+        var drop = (0.55 + Math.random() * 0.35) * h; // long vertical drop
+        var sx = startX;
+        var sy = startY;
+        var ex = startX + lean;
+        var ey = startY + drop;
+
+        var star = document.createElement('div');
+        star.className = 'shoot-star';
+        star.style.setProperty('--sx', sx + 'px');
+        star.style.setProperty('--sy', sy + 'px');
+        star.style.setProperty('--ex', ex + 'px');
+        star.style.setProperty('--ey', ey + 'px');
+
+        // Angle of travel so streak + words follow the fall path
+        var angle = Math.atan2(ey - sy, ex - sx) * (180 / Math.PI);
+
+        var streak = document.createElement('div');
+        streak.className = 'shoot-streak';
+        // Streak sits behind the head along the flight direction
+        streak.style.transform = 'translate(-100%, -50%) rotate(' + angle + 'deg)';
+        streak.style.transformOrigin = 'right center';
+        streak.style.width = '160px';
+        streak.style.marginLeft = '0';
+
+        var head = document.createElement('div');
+        head.className = 'shoot-head';
+
+        var words = document.createElement('div');
+        words.className = 'shoot-words';
+        // Words trail behind the head on the same diagonal
+        words.style.transform = 'translate(-105%, -50%) rotate(' + angle + 'deg)';
+        words.innerHTML = buildLetterSpans(PHRASE);
+
+        star.appendChild(streak);
+        star.appendChild(words);
+        star.appendChild(head);
+        layer.appendChild(star);
+
+        // Page glows slightly while the star is alive
+        if (pageGlow) {
+          pageGlow.classList.add('is-on');
+          window.setTimeout(function () {
+            pageGlow.classList.remove('is-on');
+          }, 1400);
+        }
+
+        // Kick animation on next frame
+        requestAnimationFrame(function () {
+          star.classList.add('is-flying');
+        });
+
+        window.setTimeout(function () {
+          if (star.parentNode) star.parentNode.removeChild(star);
+        }, 2200);
+      }
+
+      // First after a short beat, then every 10 seconds while the gate is open
+      window.setTimeout(function () {
+        fire();
+        timer = window.setInterval(function () {
+          if (gate.classList.contains('is-hidden')) {
+            if (timer) clearInterval(timer);
+            return;
+          }
+          fire();
+        }, INTERVAL_MS);
+      }, 2500);
+    })();
 
     // Stars
     if (canvas && canvas.getContext) {
