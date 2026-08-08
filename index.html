@@ -131,16 +131,14 @@
       background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.4) 100%);
     }
     /*
-      Letters in the tunnel — each rushes from deep space toward the camera
-      so it feels like you fly through I, then N, then T… of INTERSTELLAR
+      Letters fly AT you through the tunnel (I → N → T → …)
+      Simple 2D scale = works on all browsers (no flaky 3D z)
     */
     #wormhole .wh-letters {
       position: absolute;
       inset: 0;
-      z-index: 3;
+      z-index: 8; /* above video + vignette */
       pointer-events: none;
-      perspective: 900px;
-      perspective-origin: 50% 50%;
       overflow: hidden;
     }
     #wormhole .wh-letters span {
@@ -149,56 +147,61 @@
       top: 50%;
       display: block;
       margin: 0;
-      font-family: Orbitron, system-ui, sans-serif;
+      font-family: Orbitron, Arial Black, system-ui, sans-serif;
       font-weight: 800;
-      font-size: clamp(5rem, 28vw, 14rem);
+      font-size: clamp(6rem, 32vw, 16rem);
       line-height: 1;
-      letter-spacing: 0.02em;
-      color: rgba(255, 230, 255, 0.92);
+      color: #fff;
+      -webkit-text-stroke: 2px rgba(255, 120, 220, 0.85);
       text-shadow:
-        0 0 20px rgba(255, 80, 180, 0.95),
-        0 0 50px rgba(140, 80, 255, 0.75),
-        0 0 90px rgba(80, 140, 255, 0.45);
-      transform: translate3d(-50%, -50%, -900px) scale(0.12);
+        0 0 10px #fff,
+        0 0 30px #ff4db8,
+        0 0 60px #a78bfa,
+        0 0 100px #7c3aed;
+      /* default: invisible until animation */
       opacity: 0;
-      will-change: transform, opacity, filter;
-      backface-visibility: hidden;
+      transform: translate(-50%, -50%) scale(0.15);
+      will-change: transform, opacity;
     }
-    #wormhole.is-active .wh-letters span {
-      animation: whPassLetter 0.42s cubic-bezier(0.33, 0, 0.2, 1) forwards;
+    /* Only run when both wormhole + letters-go are on (JS restarts cleanly) */
+    #wormhole.is-active.letters-go .wh-letters span {
+      animation-name: whPassLetter;
+      animation-duration: 0.55s;
+      animation-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+      animation-fill-mode: both;
     }
-    /* Stagger: fly through each letter of INTERSTELLAR in order */
-    #wormhole.is-active .wh-letters span:nth-child(1)  { animation-delay: 0.18s; }  /* I */
-    #wormhole.is-active .wh-letters span:nth-child(2)  { animation-delay: 0.36s; }  /* N */
-    #wormhole.is-active .wh-letters span:nth-child(3)  { animation-delay: 0.54s; }  /* T */
-    #wormhole.is-active .wh-letters span:nth-child(4)  { animation-delay: 0.72s; }  /* E */
-    #wormhole.is-active .wh-letters span:nth-child(5)  { animation-delay: 0.90s; }  /* R */
-    #wormhole.is-active .wh-letters span:nth-child(6)  { animation-delay: 1.08s; }  /* S */
-    #wormhole.is-active .wh-letters span:nth-child(7)  { animation-delay: 1.26s; }  /* T */
-    #wormhole.is-active .wh-letters span:nth-child(8)  { animation-delay: 1.44s; }  /* E */
-    #wormhole.is-active .wh-letters span:nth-child(9)  { animation-delay: 1.62s; }  /* L */
-    #wormhole.is-active .wh-letters span:nth-child(10) { animation-delay: 1.80s; }  /* L */
-    #wormhole.is-active .wh-letters span:nth-child(11) { animation-delay: 1.98s; }  /* A */
-    #wormhole.is-active .wh-letters span:nth-child(12) { animation-delay: 2.16s; }  /* R */
+    #wormhole.is-active.letters-go .wh-letters span:nth-child(1)  { animation-delay: 0.12s; }
+    #wormhole.is-active.letters-go .wh-letters span:nth-child(2)  { animation-delay: 0.30s; }
+    #wormhole.is-active.letters-go .wh-letters span:nth-child(3)  { animation-delay: 0.48s; }
+    #wormhole.is-active.letters-go .wh-letters span:nth-child(4)  { animation-delay: 0.66s; }
+    #wormhole.is-active.letters-go .wh-letters span:nth-child(5)  { animation-delay: 0.84s; }
+    #wormhole.is-active.letters-go .wh-letters span:nth-child(6)  { animation-delay: 1.02s; }
+    #wormhole.is-active.letters-go .wh-letters span:nth-child(7)  { animation-delay: 1.20s; }
+    #wormhole.is-active.letters-go .wh-letters span:nth-child(8)  { animation-delay: 1.38s; }
+    #wormhole.is-active.letters-go .wh-letters span:nth-child(9)  { animation-delay: 1.56s; }
+    #wormhole.is-active.letters-go .wh-letters span:nth-child(10) { animation-delay: 1.74s; }
+    #wormhole.is-active.letters-go .wh-letters span:nth-child(11) { animation-delay: 1.92s; }
+    #wormhole.is-active.letters-go .wh-letters span:nth-child(12) { animation-delay: 2.10s; }
     @keyframes whPassLetter {
       0% {
         opacity: 0;
-        transform: translate3d(-50%, -50%, -800px) scale(0.1);
-        filter: blur(6px) brightness(1.4);
+        transform: translate(-50%, -50%) scale(0.12);
       }
-      18% {
+      12% {
         opacity: 1;
-        filter: blur(0) brightness(1.2);
+        transform: translate(-50%, -50%) scale(0.45);
       }
-      55% {
+      45% {
         opacity: 1;
-        transform: translate3d(-50%, -50%, 0px) scale(1.05);
-        filter: blur(0) brightness(1.15);
+        transform: translate(-50%, -50%) scale(1.15);
+      }
+      75% {
+        opacity: 0.9;
+        transform: translate(-50%, -50%) scale(2.4);
       }
       100% {
         opacity: 0;
-        transform: translate3d(-50%, -50%, 420px) scale(4.2);
-        filter: blur(10px) brightness(1.6);
+        transform: translate(-50%, -50%) scale(5.5);
       }
     }
     #wormhole .wh-exit-flash {
@@ -240,6 +243,10 @@
       }
     }
     @media (prefers-reduced-motion: reduce) {
+      #wormhole.is-active.letters-go .wh-letters span {
+        animation: none !important;
+        opacity: 0 !important;
+      }
       body.site-emerging main,
       body.site-emerging header {
         animation: none !important;
@@ -823,6 +830,10 @@
       <source src="video/wormhole.mp4" type="video/mp4" />
     </video>
     <div class="wh-vignette" aria-hidden="true"></div>
+    <!-- Fly through each letter of INTERSTELLAR inside the tunnel -->
+    <div class="wh-letters" aria-hidden="true">
+      <span>I</span><span>N</span><span>T</span><span>E</span><span>R</span><span>S</span><span>T</span><span>E</span><span>L</span><span>L</span><span>A</span><span>R</span>
+    </div>
     <div class="wh-exit-flash"></div>
   </div>
 
@@ -1174,7 +1185,7 @@
 
         setTimeout(function () {
           if (wormhole) {
-            wormhole.classList.remove('is-active', 'is-exiting');
+            wormhole.classList.remove('is-active', 'is-exiting', 'letters-go');
             wormhole.setAttribute('aria-hidden', 'true');
           }
           document.body.classList.remove('site-emerging');
@@ -1195,10 +1206,16 @@
       gate.classList.add('is-leaving');
 
       if (wormhole) {
-        wormhole.classList.remove('is-active', 'is-exiting');
+        wormhole.classList.remove('is-active', 'is-exiting', 'letters-go');
         void wormhole.offsetWidth;
         wormhole.classList.add('is-active');
         wormhole.setAttribute('aria-hidden', 'false');
+        // Next frame: kick letter fly-through (restarts CSS animations reliably)
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            wormhole.classList.add('letters-go');
+          });
+        });
       }
 
       // Start the real video tunnel
@@ -1400,11 +1417,11 @@
   <main>
     <!-- Hero -->
     <section id="hero" class="relative min-h-screen flex items-center justify-center px-4 sm:px-6 pt-20">
-      <div class="relative z-10 max-w-4xl mx-auto text-center">
-        <p class="reveal font-display text-xs sm:text-sm tracking-[0.35em] uppercase text-cosmic-cyan/80 mb-6">
-          Cosmic Folk · Earth Frequencies
+      <div class="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center">
+        <p class="reveal font-display text-[0.7rem] sm:text-xs md:text-sm tracking-[0.45em] sm:tracking-[0.55em] uppercase text-cosmic-cyan/85 mb-4 sm:mb-5 w-full text-center">
+          born from the stars
         </p>
-        <h1 class="reveal reveal-delay-1 font-display text-5xl sm:text-7xl md:text-8xl font-bold tracking-tight leading-none mb-6">
+        <h1 class="reveal reveal-delay-1 font-display text-5xl sm:text-7xl md:text-8xl font-bold tracking-tight leading-none mb-6 w-full text-center">
           <span class="text-gradient-cosmic">INTER</span><span class="text-gradient-earth">STELLAR</span>
         </h1>
         <p class="reveal reveal-delay-2 text-lg sm:text-xl text-white/70 max-w-xl mx-auto mb-10 font-light leading-relaxed">
