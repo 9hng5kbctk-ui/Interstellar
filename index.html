@@ -97,7 +97,7 @@
       opacity: 0 !important;
     }
 
-    /* ===== CINEMATIC WORMHOLE (Termostratos-style tunnel) ===== */
+    /* ===== REAL VIDEO WORMHOLE (looks like a film clip, not CSS lines) ===== */
     #wormhole {
       position: fixed;
       inset: 0;
@@ -113,15 +113,25 @@
       visibility: visible;
       pointer-events: all;
     }
-    #wormhole-canvas {
+    #wormhole .wh-video {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
-      display: block;
+      object-fit: cover;
+      background: #000;
       z-index: 1;
     }
-    /* INTERSTELLAR along both tunnel walls */
+    /* Soft vignette so side text reads */
+    #wormhole .wh-vignette {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,0.45) 0%, transparent 18%, transparent 82%, rgba(0,0,0,0.45) 100%),
+        radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.35) 100%);
+    }
     #wormhole .wh-side-text {
       position: absolute;
       top: 50%;
@@ -132,11 +142,10 @@
       font-size: clamp(1rem, 3.2vw, 1.85rem);
       letter-spacing: 0.42em;
       text-transform: uppercase;
-      color: rgba(255, 240, 255, 0.9);
+      color: rgba(255, 240, 255, 0.92);
       text-shadow:
         0 0 12px rgba(255, 80, 160, 0.95),
-        0 0 30px rgba(120, 80, 255, 0.8),
-        0 0 50px rgba(80, 160, 255, 0.5);
+        0 0 30px rgba(120, 80, 255, 0.8);
       white-space: nowrap;
       pointer-events: none;
       opacity: 0;
@@ -150,61 +159,51 @@
       transform: translateY(-50%) rotate(90deg);
     }
     #wormhole.is-active .wh-side-text {
-      animation: whSideIn 2.5s ease-out forwards;
+      animation: whSideIn 2.4s ease-out forwards;
     }
-    #wormhole.is-active .wh-side-text.right {
-      animation-delay: 0.1s;
-    }
+    #wormhole.is-active .wh-side-text.right { animation-delay: 0.08s; }
     @keyframes whSideIn {
-      0%   { opacity: 0; filter: blur(10px); letter-spacing: 0.7em; }
-      12%  { opacity: 1; filter: blur(0); letter-spacing: 0.42em; }
-      70%  { opacity: 0.95; }
-      100% { opacity: 0; filter: blur(8px); }
+      0%   { opacity: 0; }
+      12%  { opacity: 1; }
+      75%  { opacity: 0.95; }
+      100% { opacity: 0; }
     }
     #wormhole .wh-exit-flash {
       position: absolute;
       inset: 0;
       z-index: 6;
       background: radial-gradient(circle at center,
-        #fff 0%,
-        #ffd6f0 18%,
-        #c084fc 40%,
-        #1e3a8a 70%,
-        #000 100%);
+        #fff 0%, #ffd6f0 20%, #a78bfa 45%, #1e3a8a 75%, #000 100%);
       opacity: 0;
       pointer-events: none;
     }
     #wormhole.is-exiting .wh-exit-flash {
-      animation: whExitFlash 0.9s ease-out forwards;
+      animation: whExitFlash 0.7s ease-out forwards;
     }
     @keyframes whExitFlash {
       0%   { opacity: 0; }
-      30%  { opacity: 1; }
+      35%  { opacity: 1; }
       100% { opacity: 0; }
     }
     #wormhole.is-exiting {
-      transition: opacity 0.55s ease 0.3s, visibility 0.55s ease 0.3s;
+      transition: opacity 0.4s ease 0.2s, visibility 0.4s ease 0.2s;
       opacity: 0;
       visibility: hidden;
     }
     body.site-emerging main,
     body.site-emerging header {
-      animation: siteEmerge 1.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation: siteEmerge 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
     @keyframes siteEmerge {
       0% {
         opacity: 0;
-        transform: scale(0.55);
-        filter: blur(16px) brightness(2.2);
-      }
-      40% {
-        opacity: 1;
-        filter: blur(3px) brightness(1.4);
+        transform: scale(0.92);
+        filter: brightness(1.5);
       }
       100% {
         opacity: 1;
         transform: scale(1);
-        filter: blur(0) brightness(1);
+        filter: brightness(1);
       }
     }
     @media (prefers-reduced-motion: reduce) {
@@ -783,9 +782,19 @@
     <div id="enter-flash" class="enter-flash" aria-hidden="true"></div>
   </div>
 
-  <!-- Cinematic wormhole (canvas tunnel like the reference clip) -->
+  <!-- Real VIDEO wormhole — looks like a film clip (upload video/wormhole.mp4) -->
   <div id="wormhole" aria-hidden="true">
-    <canvas id="wormhole-canvas"></canvas>
+    <video
+      id="wh-video"
+      class="wh-video"
+      playsinline
+      muted
+      preload="auto"
+      aria-hidden="true"
+    >
+      <source src="video/wormhole.mp4" type="video/mp4" />
+    </video>
+    <div class="wh-vignette" aria-hidden="true"></div>
     <p class="wh-side-text left">INTERSTELLAR</p>
     <p class="wh-side-text right">INTERSTELLAR</p>
     <div class="wh-exit-flash"></div>
@@ -1116,207 +1125,42 @@
       }
     }
 
-    /**
-     * Canvas wormhole fly-through
-     * Inspired by cinematic CGI tunnels (smooth energy walls, red/magenta → blue,
-     * bright vanishing point, radial speed streaks).
-     */
-    function runWormholeCanvas(durationMs) {
-      var canvas = document.getElementById('wormhole-canvas');
-      if (!canvas || !canvas.getContext) return function () {};
-      var ctx = canvas.getContext('2d');
-      var w = 0, h = 0, cx = 0, cy = 0;
-      var start = performance.now();
-      var running = true;
-      var raf = null;
-
-      // Tunnel ring depths 0 (far/center) → 1 (near/camera)
-      var RING_COUNT = 48;
-      var rings = [];
-      for (var i = 0; i < RING_COUNT; i++) {
-        rings.push(i / RING_COUNT);
-      }
-
-      // Radial speed streaks
-      var streaks = [];
-      for (var s = 0; s < 90; s++) {
-        streaks.push({
-          a: Math.random() * Math.PI * 2,
-          d: Math.random(),
-          len: 0.08 + Math.random() * 0.22,
-          w: 0.6 + Math.random() * 1.8,
-          sp: 0.012 + Math.random() * 0.03
-        });
-      }
-
-      function resize() {
-        w = window.innerWidth;
-        h = window.innerHeight;
-        var dpr = Math.min(window.devicePixelRatio || 1, 2);
-        canvas.width = w * dpr;
-        canvas.height = h * dpr;
-        canvas.style.width = w + 'px';
-        canvas.style.height = h + 'px';
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        cx = w / 2;
-        cy = h / 2;
-      }
-      resize();
-
-      function ringRadius(depth) {
-        // Perspective: near rings huge, far rings tiny (vanishing point)
-        var t = Math.pow(depth, 1.55);
-        return Math.max(w, h) * 0.02 + t * Math.max(w, h) * 0.95;
-      }
-
-      function drawFrame(now) {
-        if (!running) return;
-        var elapsed = now - start;
-        var progress = Math.min(1, elapsed / durationMs);
-        // Accelerate through the tunnel
-        var speed = 0.014 + progress * 0.045;
-
-        ctx.fillStyle = '#000010';
-        ctx.fillRect(0, 0, w, h);
-
-        // Soft nebula wash — magenta left / blue right (like the reference)
-        var bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w, h) * 0.7);
-        bg.addColorStop(0, 'rgba(255,255,255,0.12)');
-        bg.addColorStop(0.15, 'rgba(180,80,255,0.08)');
-        bg.addColorStop(0.45, 'rgba(40,20,80,0.35)');
-        bg.addColorStop(1, 'rgba(0,0,8,1)');
-        ctx.fillStyle = bg;
-        ctx.fillRect(0, 0, w, h);
-
-        // Side color blooms
-        var leftBloom = ctx.createRadialGradient(0, cy, 0, 0, cy, w * 0.55);
-        leftBloom.addColorStop(0, 'rgba(220, 30, 90, 0.35)');
-        leftBloom.addColorStop(1, 'transparent');
-        ctx.fillStyle = leftBloom;
-        ctx.fillRect(0, 0, w, h);
-
-        var rightBloom = ctx.createRadialGradient(w, cy, 0, w, cy, w * 0.55);
-        rightBloom.addColorStop(0, 'rgba(40, 90, 220, 0.32)');
-        rightBloom.addColorStop(1, 'transparent');
-        ctx.fillStyle = rightBloom;
-        ctx.fillRect(0, 0, w, h);
-
-        // Advance rings toward camera
-        for (var i = 0; i < rings.length; i++) {
-          rings[i] += speed;
-          if (rings[i] > 1.05) rings[i] -= 1.05;
-        }
-
-        // Draw rings far → near so near ones sit on top
-        var sorted = rings.slice().sort(function (a, b) { return a - b; });
-        for (var r = 0; r < sorted.length; r++) {
-          var d = sorted[r];
-          if (d < 0.02) continue;
-          var rad = ringRadius(d);
-          var alpha = Math.min(1, d * 1.3) * (1 - Math.pow(d, 2.2));
-          if (alpha < 0.02) continue;
-
-          // Smooth energy wall band
-          ctx.beginPath();
-          ctx.ellipse(cx, cy, rad, rad * 0.72, 0, 0, Math.PI * 2);
-
-          // Magenta→purple→blue along the ring (left warm, right cool)
-          var grad = ctx.createLinearGradient(cx - rad, cy, cx + rad, cy);
-          grad.addColorStop(0, 'rgba(255, 40, 100, ' + (alpha * 0.95) + ')');
-          grad.addColorStop(0.35, 'rgba(200, 60, 200, ' + (alpha * 0.75) + ')');
-          grad.addColorStop(0.55, 'rgba(120, 80, 255, ' + (alpha * 0.7) + ')');
-          grad.addColorStop(1, 'rgba(40, 120, 255, ' + (alpha * 0.95) + ')');
-
-          ctx.strokeStyle = grad;
-          ctx.lineWidth = Math.max(1.5, 10 * d * (1.1 - d));
-          ctx.shadowColor = d < 0.5 ? 'rgba(180,80,255,0.5)' : 'rgba(255,60,140,0.45)';
-          ctx.shadowBlur = 12 * d;
-          ctx.stroke();
-          ctx.shadowBlur = 0;
-
-          // Inner glow rim
-          if (d > 0.15 && d < 0.85) {
-            ctx.beginPath();
-            ctx.ellipse(cx, cy, rad * 0.97, rad * 0.7, 0, 0, Math.PI * 2);
-            ctx.strokeStyle = 'rgba(255,255,255,' + (alpha * 0.18) + ')';
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-        }
-
-        // Radial light streaks (hyperspace / tunnel speed)
-        for (var j = 0; j < streaks.length; j++) {
-          var st = streaks[j];
-          st.d += st.sp + speed * 0.8;
-          if (st.d > 1.2) {
-            st.d = Math.random() * 0.1;
-            st.a = Math.random() * Math.PI * 2;
-          }
-          var r0 = ringRadius(Math.max(0.05, st.d - st.len));
-          var r1 = ringRadius(st.d);
-          var x0 = cx + Math.cos(st.a) * r0 * 0.72;
-          var y0 = cy + Math.sin(st.a) * r0 * 0.55;
-          var x1 = cx + Math.cos(st.a) * r1;
-          var y1 = cy + Math.sin(st.a) * r1 * 0.75;
-          var sa = Math.min(1, st.d) * 0.85;
-          ctx.beginPath();
-          ctx.moveTo(x0, y0);
-          ctx.lineTo(x1, y1);
-          ctx.strokeStyle = 'rgba(255,255,255,' + sa + ')';
-          ctx.lineWidth = st.w;
-          ctx.lineCap = 'round';
-          ctx.stroke();
-        }
-
-        // Bright vanishing-point core (end of the tunnel)
-        var coreR = 6 + progress * 40 + Math.sin(elapsed * 0.01) * 3;
-        var core = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 8);
-        core.addColorStop(0, 'rgba(255,255,255,1)');
-        core.addColorStop(0.12, 'rgba(255,220,255,0.95)');
-        core.addColorStop(0.35, 'rgba(200,120,255,0.45)');
-        core.addColorStop(0.65, 'rgba(80,100,255,0.12)');
-        core.addColorStop(1, 'transparent');
-        ctx.fillStyle = core;
-        ctx.beginPath();
-        ctx.arc(cx, cy, coreR * 8, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Vignette
-        var vig = ctx.createRadialGradient(cx, cy, Math.min(w, h) * 0.2, cx, cy, Math.max(w, h) * 0.75);
-        vig.addColorStop(0, 'transparent');
-        vig.addColorStop(1, 'rgba(0,0,0,0.55)');
-        ctx.fillStyle = vig;
-        ctx.fillRect(0, 0, w, h);
-
-        // Near end: white-out into exit
-        if (progress > 0.78) {
-          var flashA = (progress - 0.78) / 0.22;
-          ctx.fillStyle = 'rgba(255,255,255,' + (flashA * flashA) + ')';
-          ctx.fillRect(0, 0, w, h);
-        }
-
-        raf = requestAnimationFrame(drawFrame);
-      }
-
-      raf = requestAnimationFrame(drawFrame);
-      window.addEventListener('resize', resize);
-
-      return function stop() {
-        running = false;
-        if (raf) cancelAnimationFrame(raf);
-        window.removeEventListener('resize', resize);
-      };
-    }
-
     function enterSite() {
       var wormhole = document.getElementById('wormhole');
-      var stopTunnel = null;
-      var DURATION = 2600;
+      var video = document.getElementById('wh-video');
+      var finished = false;
+      // Play ~first few seconds of the tunnel clip, then emerge
+      var PLAY_MS = 2800;
 
-      // Whoosh (user click unlocks audio)
+      function finishEnter() {
+        if (finished) return;
+        finished = true;
+        if (video) {
+          try { video.pause(); } catch (e) {}
+        }
+        if (wormhole) wormhole.classList.add('is-exiting');
+
+        document.body.classList.remove('gate-open');
+        document.body.style.overflow = '';
+        document.body.classList.add('site-emerging');
+        if (mini) mini.classList.remove('hidden');
+        window.scrollTo(0, 0);
+
+        setTimeout(function () {
+          if (wormhole) {
+            wormhole.classList.remove('is-active', 'is-exiting');
+            wormhole.setAttribute('aria-hidden', 'true');
+          }
+          document.body.classList.remove('site-emerging');
+          if (video) {
+            try { video.currentTime = 0; } catch (e2) {}
+          }
+        }, 700);
+      }
+
+      // Whoosh SFX over the (muted) video
       playWormholeWhoosh();
 
-      // Pull into the wormhole from the enter screen
       if (flash) {
         flash.classList.remove('is-boom');
         void flash.offsetWidth;
@@ -1324,43 +1168,34 @@
       }
       gate.classList.add('is-leaving');
 
-      // Activate tunnel
       if (wormhole) {
         wormhole.classList.remove('is-active', 'is-exiting');
         void wormhole.offsetWidth;
         wormhole.classList.add('is-active');
         wormhole.setAttribute('aria-hidden', 'false');
-        stopTunnel = runWormholeCanvas(DURATION);
       }
 
-      // Shortly after dive starts, hide gate fully
+      // Start the real video tunnel
+      if (video) {
+        try {
+          video.muted = true; // autoplay-safe; whoosh provides sound
+          video.currentTime = 0;
+          var p = video.play();
+          if (p && typeof p.then === 'function') {
+            p.catch(function () {
+              /* if video missing, still finish after timer */
+            });
+          }
+        } catch (err) {}
+        video.onended = function () { finishEnter(); };
+      }
+
       setTimeout(function () {
         gate.classList.add('is-into-wormhole', 'is-hidden');
-      }, 350);
+      }, 250);
 
-      // Mid-flight: site is on the other side
-      setTimeout(function () {
-        document.body.classList.remove('gate-open');
-        document.body.style.overflow = '';
-        document.body.classList.add('site-emerging');
-        if (mini) mini.classList.remove('hidden');
-        window.scrollTo(0, 0);
-      }, 1200);
-
-      // Exit burst
-      setTimeout(function () {
-        if (wormhole) wormhole.classList.add('is-exiting');
-      }, 2300);
-
-      // Cleanup
-      setTimeout(function () {
-        if (typeof stopTunnel === 'function') stopTunnel();
-        if (wormhole) {
-          wormhole.classList.remove('is-active', 'is-exiting');
-          wormhole.setAttribute('aria-hidden', 'true');
-        }
-        document.body.classList.remove('site-emerging');
-      }, 3200);
+      // Always emerge after PLAY_MS even if video is longer
+      setTimeout(finishEnter, PLAY_MS);
     }
 
     if (audio) audio.volume = volume ? Number(volume.value) : 0.7;
