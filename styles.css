@@ -317,8 +317,10 @@ footer,
 
 /* ----- Discography planet cards ----- */
 .disc-card {
-  cursor: default;
+  cursor: pointer;
   transition: transform 0.35s ease;
+  text-decoration: none;
+  color: inherit;
 }
 
 .disc-card:hover {
@@ -349,13 +351,55 @@ footer,
   transform: scale(1.06);
 }
 
+/* Artwork wrapped onto a sphere (cover art + 3D shading) */
+.planet-sphere-art {
+  background-color: #0f0a1a;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow:
+    inset -20px -14px 36px rgba(0, 0, 0, 0.65),
+    inset 8px 6px 18px rgba(255, 255, 255, 0.12),
+    0 0 36px rgba(124, 58, 237, 0.35);
+}
+
+/* Soft 3D limb darkening + highlight so art still reads as a planet */
+.planet-sphere-art::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.28) 0%, transparent 32%),
+    radial-gradient(circle at 70% 72%, transparent 35%, rgba(0, 0, 0, 0.55) 100%),
+    linear-gradient(125deg, rgba(255, 255, 255, 0.1) 0%, transparent 42%, rgba(0, 0, 0, 0.25) 100%);
+}
+
+/* Slow spin on hover so the “globe” feels dimensional */
+.disc-card:hover .planet-sphere-art {
+  animation: planetArtSpin 14s linear infinite;
+}
+
+@keyframes planetArtSpin {
+  from { background-position: 0% center; }
+  to { background-position: 200% center; }
+}
+
+/* For art planets, slightly enlarge bg so spin reveals more of the wrap */
+.planet-sphere-art {
+  background-size: 140% 140%;
+}
+
 .planet-atmosphere {
   position: absolute;
   inset: -4px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   pointer-events: none;
   z-index: 3;
+  box-shadow: 0 0 16px rgba(167, 139, 250, 0.2);
 }
 
 .planet-surface {
