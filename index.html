@@ -1078,6 +1078,7 @@
     }
 
     /** Procedural whoosh — no audio file needed (plays after user click) */
+    /** Soft sci‑fi space whoosh (no drill / sawtooth harshness) */
     function playWormholeWhoosh() {
       try {
         var AC = window.AudioContext || window.webkitAudioContext;
@@ -1087,76 +1088,117 @@
         if (ctx.state === 'suspended') ctx.resume();
 
         var now = ctx.currentTime;
-        var dur = 2.4;
+        var dur = 2.6;
 
-        // Filtered noise = air rush
+        // Master + soft “space” reverb tail via delay
+        var master = ctx.createGain();
+        master.gain.value = 0.9;
+        master.connect(ctx.destination);
+
+        var delay = ctx.createDelay(1.0);
+        delay.delayTime.value = 0.22;
+        var delayFb = ctx.createGain();
+        delayFb.gain.value = 0.28;
+        var delayFilter = ctx.createBiquadFilter();
+        delayFilter.type = 'lowpass';
+        delayFilter.frequency.value = 1800;
+        delay.connect(delayFilter);
+        delayFilter.connect(delayFb);
+        delayFb.connect(delay);
+        delayFilter.connect(master);
+
+        // Soft brown-ish noise = distant cosmic wind (not harsh static)
         var bufferSize = Math.floor(ctx.sampleRate * dur);
         var buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         var data = buffer.getChannelData(0);
+        var last = 0;
         for (var i = 0; i < bufferSize; i++) {
-          // Pink-ish noise with fade envelope baked in later
-          data[i] = (Math.random() * 2 - 1) * 0.55;
+          var white = Math.random() * 2 - 1;
+          last = (last + 0.02 * white) / 1.02; // brown noise
+          data[i] = last * 3.5;
         }
         var noise = ctx.createBufferSource();
         noise.buffer = buffer;
 
-        var filter = ctx.createBiquadFilter();
-        filter.type = 'bandpass';
-        filter.frequency.setValueAtTime(400, now);
-        filter.frequency.exponentialRampToValueAtTime(2800, now + 0.45);
-        filter.frequency.exponentialRampToValueAtTime(600, now + dur);
-        filter.Q.value = 0.7;
+        var noiseLP = ctx.createBiquadFilter();
+        noiseLP.type = 'lowpass';
+        noiseLP.frequency.setValueAtTime(500, now);
+        noiseLP.frequency.exponentialRampToValueAtTime(1400, now + 0.8);
+        noiseLP.frequency.exponentialRampToValueAtTime(400, now + dur);
+
+        var noiseHP = ctx.createBiquadFilter();
+        noiseHP.type = 'highpass';
+        noiseHP.frequency.value = 80;
 
         var noiseGain = ctx.createGain();
         noiseGain.gain.setValueAtTime(0.0001, now);
-        noiseGain.gain.exponentialRampToValueAtTime(0.55, now + 0.12);
-        noiseGain.gain.exponentialRampToValueAtTime(0.35, now + 0.9);
+        noiseGain.gain.exponentialRampToValueAtTime(0.22, now + 0.25);
+        noiseGain.gain.exponentialRampToValueAtTime(0.16, now + 1.2);
         noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
 
-        noise.connect(filter);
-        filter.connect(noiseGain);
-        noiseGain.connect(ctx.destination);
+        noise.connect(noiseHP);
+        noiseHP.connect(noiseLP);
+        noiseLP.connect(noiseGain);
+        noiseGain.connect(master);
+        noiseGain.connect(delay);
         noise.start(now);
         noise.stop(now + dur);
 
-        // Rising “warp” tone
-        var osc = ctx.createOscillator();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(55, now);
-        osc.frequency.exponentialRampToValueAtTime(420, now + 0.7);
-        osc.frequency.exponentialRampToValueAtTime(90, now + dur);
+        // Deep space pad (sine) — smooth warp, not metallic
+        function spaceTone(type, freq0, freq1, peak, startOff, endOff) {
+          var o = ctx.createOscillator();
+          o.type = type;
+          o.frequency.setValueAtTime(freq0, now + startOff);
+          o.frequency.exponentialRampToValueAtTime(freq1, now + startOff + 1.1);
+          o.frequency.exponentialRampToValueAtTime(freq0 * 0.85, now + endOff);
 
-        var oscFilter = ctx.createBiquadFilter();
-        oscFilter.type = 'lowpass';
-        oscFilter.frequency.setValueAtTime(800, now);
-        oscFilter.frequency.exponentialRampToValueAtTime(2400, now + 0.5);
-        oscFilter.frequency.exponentialRampToValueAtTime(400, now + dur);
+          var g = ctx.createGain();
+          g.gain.setValueAtTime(0.0001, now + startOff);
+          g.gain.exponentialRampToValueAtTime(peak, now + startOff + 0.35);
+          g.gain.exponentialRampToValueAtTime(peak * 0.7, now + startOff + 1.4);
+          g.gain.exponentialRampToValueAtTime(0.0001, now + endOff);
 
-        var oscGain = ctx.createGain();
-        oscGain.gain.setValueAtTime(0.0001, now);
-        oscGain.gain.exponentialRampToValueAtTime(0.12, now + 0.15);
-        oscGain.gain.exponentialRampToValueAtTime(0.08, now + 1.2);
-        oscGain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+          o.connect(g);
+          g.connect(master);
+          g.connect(delay);
+          o.start(now + startOff);
+          o.stop(now + endOff + 0.05);
+        }
 
-        osc.connect(oscFilter);
-        oscFilter.connect(oscGain);
-        oscGain.connect(ctx.destination);
-        osc.start(now);
-        osc.stop(now + dur);
+        spaceTone('sine', 48, 96, 0.14, 0, dur);       // sub hum
+        spaceTone('sine', 110, 220, 0.07, 0.05, dur);   // warm mid
+        spaceTone('triangle', 220, 440, 0.04, 0.1, dur - 0.2); // soft lift
 
-        // Exit “boom” click near the end
-        var boom = ctx.createOscillator();
-        boom.type = 'sine';
-        boom.frequency.setValueAtTime(180, now + 1.9);
-        boom.frequency.exponentialRampToValueAtTime(40, now + 2.35);
-        var boomGain = ctx.createGain();
-        boomGain.gain.setValueAtTime(0.0001, now + 1.9);
-        boomGain.gain.exponentialRampToValueAtTime(0.28, now + 1.95);
-        boomGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.4);
-        boom.connect(boomGain);
-        boomGain.connect(ctx.destination);
-        boom.start(now + 1.9);
-        boom.stop(now + 2.45);
+        // High airy shimmer (sci‑fi sparkle, very quiet)
+        var shimmer = ctx.createOscillator();
+        shimmer.type = 'sine';
+        shimmer.frequency.setValueAtTime(880, now);
+        shimmer.frequency.exponentialRampToValueAtTime(1760, now + 1.0);
+        shimmer.frequency.exponentialRampToValueAtTime(990, now + dur);
+        var shimmerGain = ctx.createGain();
+        shimmerGain.gain.setValueAtTime(0.0001, now);
+        shimmerGain.gain.exponentialRampToValueAtTime(0.025, now + 0.4);
+        shimmerGain.gain.exponentialRampToValueAtTime(0.015, now + 1.5);
+        shimmerGain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+        shimmer.connect(shimmerGain);
+        shimmerGain.connect(master);
+        shimmer.start(now);
+        shimmer.stop(now + dur);
+
+        // Gentle arrival bloom (soft, not a drill click)
+        var bloom = ctx.createOscillator();
+        bloom.type = 'sine';
+        bloom.frequency.setValueAtTime(65, now + 2.0);
+        bloom.frequency.exponentialRampToValueAtTime(130, now + 2.15);
+        bloom.frequency.exponentialRampToValueAtTime(55, now + 2.55);
+        var bloomGain = ctx.createGain();
+        bloomGain.gain.setValueAtTime(0.0001, now + 2.0);
+        bloomGain.gain.exponentialRampToValueAtTime(0.12, now + 2.12);
+        bloomGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.55);
+        bloom.connect(bloomGain);
+        bloomGain.connect(master);
+        bloom.start(now + 2.0);
+        bloom.stop(now + 2.6);
       } catch (e) {
         /* ignore audio errors */
       }
