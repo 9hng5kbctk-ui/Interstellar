@@ -88,7 +88,193 @@
       visibility: hidden !important;
       pointer-events: none !important;
     }
-    #enter-gate.is-leaving { transform: scale(1.05); }
+    #enter-gate.is-leaving {
+      transform: scale(1.15);
+      filter: blur(2px) brightness(1.4);
+      transition: transform 0.55s ease, filter 0.55s ease, opacity 0.55s ease !important;
+    }
+    #enter-gate.is-into-wormhole {
+      opacity: 0 !important;
+    }
+
+    /* ===== WORMHOLE TRANSITION ===== */
+    #wormhole {
+      position: fixed;
+      inset: 0;
+      z-index: 2147483600;
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      background: #000;
+      overflow: hidden;
+    }
+    #wormhole.is-active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: all;
+    }
+    #wormhole .wh-sky {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 50%, #1a0a2e 0%, #050508 55%, #000 100%);
+    }
+    #wormhole .wh-tunnel {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: min(140vw, 140vh);
+      height: min(140vw, 140vh);
+      margin: calc(min(140vw, 140vh) / -2) 0 0 calc(min(140vw, 140vh) / -2);
+      border-radius: 50%;
+      transform-style: preserve-3d;
+      animation: whSpin 2.6s linear infinite;
+    }
+    #wormhole.is-active .wh-tunnel {
+      animation:
+        whSpin 2.6s linear infinite,
+        whDive 2.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
+    }
+    @keyframes whSpin {
+      from { transform: rotate(0deg) scale(1); }
+      to { transform: rotate(360deg) scale(1); }
+    }
+    @keyframes whDive {
+      0%   { transform: rotate(0deg) scale(0.35); }
+      40%  { transform: rotate(180deg) scale(1.1); }
+      100% { transform: rotate(520deg) scale(3.2); }
+    }
+    #wormhole .wh-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      border-style: solid;
+      border-color: transparent;
+      transform: translate(-50%, -50%);
+      box-shadow:
+        0 0 20px rgba(167, 139, 250, 0.35),
+        inset 0 0 20px rgba(244, 114, 182, 0.15);
+    }
+    /* Concentric wormhole rings — purple / pink / cyan */
+    #wormhole .wh-ring:nth-child(1)  { width: 8%;  height: 8%;  border-width: 3px; border-color: rgba(255,255,255,0.9); box-shadow: 0 0 30px #fff, inset 0 0 20px #a78bfa; }
+    #wormhole .wh-ring:nth-child(2)  { width: 16%; height: 16%; border-width: 3px; border-color: rgba(251,207,232,0.85); }
+    #wormhole .wh-ring:nth-child(3)  { width: 24%; height: 24%; border-width: 4px; border-color: rgba(244,114,182,0.75); }
+    #wormhole .wh-ring:nth-child(4)  { width: 34%; height: 34%; border-width: 4px; border-color: rgba(167,139,250,0.7); }
+    #wormhole .wh-ring:nth-child(5)  { width: 46%; height: 46%; border-width: 5px; border-color: rgba(99,102,241,0.65); }
+    #wormhole .wh-ring:nth-child(6)  { width: 58%; height: 58%; border-width: 5px; border-color: rgba(56,189,248,0.5); }
+    #wormhole .wh-ring:nth-child(7)  { width: 70%; height: 70%; border-width: 6px; border-color: rgba(124,58,237,0.55); }
+    #wormhole .wh-ring:nth-child(8)  { width: 82%; height: 82%; border-width: 6px; border-color: rgba(236,72,153,0.4); }
+    #wormhole .wh-ring:nth-child(9)  { width: 94%; height: 94%; border-width: 7px; border-color: rgba(67,56,202,0.35); }
+    #wormhole .wh-ring:nth-child(10) { width: 108%; height: 108%; border-width: 8px; border-color: rgba(15,23,42,0.5); }
+
+    #wormhole .wh-core {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 12px;
+      height: 12px;
+      margin: -6px 0 0 -6px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow:
+        0 0 20px 8px #fff,
+        0 0 60px 24px rgba(167,139,250,0.9),
+        0 0 120px 48px rgba(244,114,182,0.5);
+      z-index: 2;
+      animation: whCorePulse 0.4s ease-in-out infinite alternate;
+    }
+    #wormhole.is-active .wh-core {
+      animation:
+        whCorePulse 0.4s ease-in-out infinite alternate,
+        whCoreGrow 2.5s ease-in forwards;
+    }
+    @keyframes whCorePulse {
+      from { opacity: 0.85; }
+      to { opacity: 1; }
+    }
+    @keyframes whCoreGrow {
+      0%   { transform: scale(1); opacity: 1; }
+      70%  { transform: scale(8); opacity: 1; }
+      100% { transform: scale(80); opacity: 1; }
+    }
+    /* Streak lines rushing past */
+    #wormhole .wh-streaks {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+    }
+    #wormhole .wh-streak {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 2px;
+      height: 40vh;
+      margin-left: -1px;
+      transform-origin: center top;
+      background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.85), transparent);
+      opacity: 0;
+    }
+    #wormhole.is-active .wh-streak {
+      animation: whStreak 0.55s linear infinite;
+    }
+    @keyframes whStreak {
+      0%   { transform: rotate(var(--r, 0deg)) translateY(0) scaleY(0.2); opacity: 0; }
+      20%  { opacity: 0.9; }
+      100% { transform: rotate(var(--r, 0deg)) translateY(55vh) scaleY(1.4); opacity: 0; }
+    }
+    #wormhole .wh-exit-flash {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      background: radial-gradient(circle at center, #fff 0%, #e9d5ff 30%, #7c3aed 70%, #000 100%);
+      opacity: 0;
+      pointer-events: none;
+    }
+    #wormhole.is-exiting .wh-exit-flash {
+      animation: whExitFlash 0.85s ease-out forwards;
+    }
+    @keyframes whExitFlash {
+      0%   { opacity: 0; }
+      35%  { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    #wormhole.is-exiting {
+      transition: opacity 0.6s ease 0.35s, visibility 0.6s ease 0.35s;
+      opacity: 0;
+      visibility: hidden;
+    }
+    /* Main site emerges out of the wormhole */
+    body.site-emerging main,
+    body.site-emerging header {
+      animation: siteEmerge 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    @keyframes siteEmerge {
+      0% {
+        opacity: 0;
+        transform: scale(0.72);
+        filter: blur(12px) brightness(2);
+      }
+      45% {
+        opacity: 1;
+        filter: blur(2px) brightness(1.3);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0) brightness(1);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #wormhole .wh-tunnel,
+      #wormhole .wh-core,
+      #wormhole .wh-streak,
+      body.site-emerging main,
+      body.site-emerging header {
+        animation: none !important;
+      }
+    }
     #gate-stars {
       position: absolute !important; inset: 0 !important;
       width: 100% !important; height: 100% !important;
@@ -654,6 +840,26 @@
     <div id="enter-flash" class="enter-flash" aria-hidden="true"></div>
   </div>
 
+  <!-- Wormhole tunnel — plays when you hit Enter Interstellar -->
+  <div id="wormhole" aria-hidden="true">
+    <div class="wh-sky"></div>
+    <div class="wh-streaks" id="wh-streaks"></div>
+    <div class="wh-tunnel">
+      <div class="wh-ring"></div>
+      <div class="wh-ring"></div>
+      <div class="wh-ring"></div>
+      <div class="wh-ring"></div>
+      <div class="wh-ring"></div>
+      <div class="wh-ring"></div>
+      <div class="wh-ring"></div>
+      <div class="wh-ring"></div>
+      <div class="wh-ring"></div>
+      <div class="wh-ring"></div>
+    </div>
+    <div class="wh-core"></div>
+    <div class="wh-exit-flash"></div>
+  </div>
+
   <!-- Entrance logic INLINE — works even if script.js is missing on GitHub -->
   <script>
   (function () {
@@ -895,24 +1101,71 @@
     }
 
     function enterSite() {
+      var wormhole = document.getElementById('wormhole');
+      var streaks = document.getElementById('wh-streaks');
+
+      // Build radial light streaks once
+      if (streaks && !streaks.dataset.ready) {
+        streaks.dataset.ready = '1';
+        for (var i = 0; i < 28; i++) {
+          var s = document.createElement('div');
+          s.className = 'wh-streak';
+          s.style.setProperty('--r', (i * (360 / 28)) + 'deg');
+          s.style.animationDelay = (Math.random() * 0.5) + 's';
+          streaks.appendChild(s);
+        }
+      }
+
+      // Pull into the wormhole from the enter screen
       if (flash) {
         flash.classList.remove('is-boom');
         void flash.offsetWidth;
         flash.classList.add('is-boom');
       }
       gate.classList.add('is-leaving');
+
+      // Activate tunnel
+      if (wormhole) {
+        wormhole.classList.add('is-active');
+        wormhole.setAttribute('aria-hidden', 'false');
+      }
+
+      // Shortly after dive starts, hide gate fully
       setTimeout(function () {
-        gate.classList.add('is-hidden');
+        gate.classList.add('is-into-wormhole', 'is-hidden');
+      }, 400);
+
+      // Mid-flight: site is “on the other side” — prepare emerge
+      setTimeout(function () {
         document.body.classList.remove('gate-open');
         document.body.style.overflow = '';
+        document.body.classList.add('site-emerging');
         if (mini) mini.classList.remove('hidden');
-      }, 500);
+        // Scroll to top of the main universe
+        window.scrollTo(0, 0);
+      }, 1100);
+
+      // Exit burst — blast out of the wormhole onto the site
+      setTimeout(function () {
+        if (wormhole) wormhole.classList.add('is-exiting');
+      }, 2100);
+
+      // Cleanup wormhole overlay
+      setTimeout(function () {
+        if (wormhole) {
+          wormhole.classList.remove('is-active', 'is-exiting');
+          wormhole.setAttribute('aria-hidden', 'true');
+        }
+        document.body.classList.remove('site-emerging');
+      }, 3000);
     }
 
     if (audio) audio.volume = volume ? Number(volume.value) : 0.7;
 
     if (btn) {
       btn.addEventListener('click', function () {
+        if (btn.dataset.busy === '1') return;
+        btn.dataset.busy = '1';
         if (audio) {
           audio.play().then(function () {
             setPlaying(true);
