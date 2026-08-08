@@ -122,51 +122,84 @@
       background: #000;
       z-index: 1;
     }
-    /* Soft vignette so side text reads */
+    /* Soft edge vignette over the video */
     #wormhole .wh-vignette {
       position: absolute;
       inset: 0;
       z-index: 2;
       pointer-events: none;
-      background:
-        linear-gradient(90deg, rgba(0,0,0,0.45) 0%, transparent 18%, transparent 82%, rgba(0,0,0,0.45) 100%),
-        radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.35) 100%);
+      background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.4) 100%);
     }
-    #wormhole .wh-side-text {
+    /*
+      Letters in the tunnel — each rushes from deep space toward the camera
+      so it feels like you fly through I, then N, then T… of INTERSTELLAR
+    */
+    #wormhole .wh-letters {
       position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      perspective: 900px;
+      perspective-origin: 50% 50%;
+      overflow: hidden;
+    }
+    #wormhole .wh-letters span {
+      position: absolute;
+      left: 50%;
       top: 50%;
-      z-index: 4;
+      display: block;
       margin: 0;
       font-family: Orbitron, system-ui, sans-serif;
-      font-weight: 700;
-      font-size: clamp(1rem, 3.2vw, 1.85rem);
-      letter-spacing: 0.42em;
-      text-transform: uppercase;
-      color: rgba(255, 240, 255, 0.92);
+      font-weight: 800;
+      font-size: clamp(5rem, 28vw, 14rem);
+      line-height: 1;
+      letter-spacing: 0.02em;
+      color: rgba(255, 230, 255, 0.92);
       text-shadow:
-        0 0 12px rgba(255, 80, 160, 0.95),
-        0 0 30px rgba(120, 80, 255, 0.8);
-      white-space: nowrap;
-      pointer-events: none;
+        0 0 20px rgba(255, 80, 180, 0.95),
+        0 0 50px rgba(140, 80, 255, 0.75),
+        0 0 90px rgba(80, 140, 255, 0.45);
+      transform: translate3d(-50%, -50%, -900px) scale(0.12);
       opacity: 0;
+      will-change: transform, opacity, filter;
+      backface-visibility: hidden;
     }
-    #wormhole .wh-side-text.left {
-      left: 3vw;
-      transform: translateY(-50%) rotate(-90deg);
+    #wormhole.is-active .wh-letters span {
+      animation: whPassLetter 0.42s cubic-bezier(0.33, 0, 0.2, 1) forwards;
     }
-    #wormhole .wh-side-text.right {
-      right: 3vw;
-      transform: translateY(-50%) rotate(90deg);
-    }
-    #wormhole.is-active .wh-side-text {
-      animation: whSideIn 2.4s ease-out forwards;
-    }
-    #wormhole.is-active .wh-side-text.right { animation-delay: 0.08s; }
-    @keyframes whSideIn {
-      0%   { opacity: 0; }
-      12%  { opacity: 1; }
-      75%  { opacity: 0.95; }
-      100% { opacity: 0; }
+    /* Stagger: fly through each letter of INTERSTELLAR in order */
+    #wormhole.is-active .wh-letters span:nth-child(1)  { animation-delay: 0.18s; }  /* I */
+    #wormhole.is-active .wh-letters span:nth-child(2)  { animation-delay: 0.36s; }  /* N */
+    #wormhole.is-active .wh-letters span:nth-child(3)  { animation-delay: 0.54s; }  /* T */
+    #wormhole.is-active .wh-letters span:nth-child(4)  { animation-delay: 0.72s; }  /* E */
+    #wormhole.is-active .wh-letters span:nth-child(5)  { animation-delay: 0.90s; }  /* R */
+    #wormhole.is-active .wh-letters span:nth-child(6)  { animation-delay: 1.08s; }  /* S */
+    #wormhole.is-active .wh-letters span:nth-child(7)  { animation-delay: 1.26s; }  /* T */
+    #wormhole.is-active .wh-letters span:nth-child(8)  { animation-delay: 1.44s; }  /* E */
+    #wormhole.is-active .wh-letters span:nth-child(9)  { animation-delay: 1.62s; }  /* L */
+    #wormhole.is-active .wh-letters span:nth-child(10) { animation-delay: 1.80s; }  /* L */
+    #wormhole.is-active .wh-letters span:nth-child(11) { animation-delay: 1.98s; }  /* A */
+    #wormhole.is-active .wh-letters span:nth-child(12) { animation-delay: 2.16s; }  /* R */
+    @keyframes whPassLetter {
+      0% {
+        opacity: 0;
+        transform: translate3d(-50%, -50%, -800px) scale(0.1);
+        filter: blur(6px) brightness(1.4);
+      }
+      18% {
+        opacity: 1;
+        filter: blur(0) brightness(1.2);
+      }
+      55% {
+        opacity: 1;
+        transform: translate3d(-50%, -50%, 0px) scale(1.05);
+        filter: blur(0) brightness(1.15);
+      }
+      100% {
+        opacity: 0;
+        transform: translate3d(-50%, -50%, 420px) scale(4.2);
+        filter: blur(10px) brightness(1.6);
+      }
     }
     #wormhole .wh-exit-flash {
       position: absolute;
@@ -207,15 +240,10 @@
       }
     }
     @media (prefers-reduced-motion: reduce) {
-      #wormhole .wh-side-text,
       body.site-emerging main,
       body.site-emerging header {
         animation: none !important;
       }
-    }
-    @media (max-width: 520px) {
-      #wormhole .wh-side-text.left { left: 0.5vw; letter-spacing: 0.25em; font-size: 0.9rem; }
-      #wormhole .wh-side-text.right { right: 0.5vw; letter-spacing: 0.25em; font-size: 0.9rem; }
     }
     #gate-stars {
       position: absolute !important; inset: 0 !important;
@@ -795,8 +823,6 @@
       <source src="video/wormhole.mp4" type="video/mp4" />
     </video>
     <div class="wh-vignette" aria-hidden="true"></div>
-    <p class="wh-side-text left">INTERSTELLAR</p>
-    <p class="wh-side-text right">INTERSTELLAR</p>
     <div class="wh-exit-flash"></div>
   </div>
 
