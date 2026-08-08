@@ -1506,67 +1506,57 @@
               </div>
             </div>
             <div class="flex-1 min-w-0">
-              <h3 class="font-display text-xl sm:text-2xl font-semibold truncate">Humans</h3>
-              <p class="text-white/50 text-sm mt-1">Single · 2023 · Stream on Apple Music</p>
+              <h3 class="font-display text-xl sm:text-2xl font-semibold truncate">INTERSTELLAR</h3>
+              <p class="text-white/50 text-sm mt-1">Stream on Spotify or Apple Music</p>
               <div class="mt-3 flex flex-wrap gap-2">
+                <span class="chip">Spotify</span>
                 <span class="chip">Apple Music</span>
-                <span class="chip">Single</span>
               </div>
             </div>
           </div>
 
-          <!-- Primary: Apple Music — Humans single -->
-          <a
-            href="https://music.apple.com/gb/album/humans-single/1716240182"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex items-center justify-between gap-4 w-full p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-pink-600/30 via-purple-600/25 to-cosmic-purple/30 border border-white/15 hover:border-pink-400/40 transition-all group"
-          >
-            <div class="flex items-center gap-4 min-w-0">
-              <div class="shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-rose-700 flex items-center justify-center shadow-lg">
-                <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M23.997 6.124c0-.738-.065-1.47-.19-2.19-.494-2.801-2.427-4.72-5.23-5.19C17.662.62 16.037.5 14.5.5h-5c-1.537 0-3.162.12-4.077.244-2.803.47-4.736 2.389-5.23 5.19C.065 4.654 0 5.386 0 6.124v11.752c0 .738.065 1.47.193 2.19.494 2.801 2.427 4.72 5.23 5.19.915.124 2.54.244 4.077.244h5c1.537 0 3.162-.12 4.077-.244 2.803-.47 4.736-2.389 5.23-5.19.125-.72.19-1.452.19-2.19V6.124zM15.5 17.5c0 1.38-1.567 2.5-3.5 2.5s-3.5-1.12-3.5-2.5 1.567-2.5 3.5-2.5 3.5 1.12 3.5 2.5zm1-8.5v7.5h-2v-5.5l-4 1.2V17.5h-2V7.8l6-1.8v3z"/></svg>
-              </div>
-              <div class="text-left min-w-0">
-                <p class="font-display font-semibold text-white group-hover:text-earth-amber transition-colors">Play Humans on Apple Music</p>
-                <p class="text-sm text-white/50 truncate">music.apple.com · Humans - Single</p>
-              </div>
-            </div>
-            <span class="shrink-0 text-white/40 group-hover:text-white group-hover:translate-x-1 transition-all text-xl" aria-hidden="true">→</span>
-          </a>
+          <div class="mt-2 player-tabs flex gap-2">
+            <button type="button" data-player="spotify" class="player-tab active">Spotify</button>
+            <button type="button" data-player="apple" class="player-tab">Apple Music</button>
+          </div>
 
-          <!-- Optional: Spotify embed (hidden until you add a Spotify link) -->
-          <div class="player-embed hidden rounded-2xl overflow-hidden bg-black/40 border border-white/10 mt-4">
+          <!-- Spotify artist player -->
+          <div class="player-embed mt-4 rounded-2xl overflow-hidden bg-black/40 border border-white/10">
             <iframe
               id="spotify-embed"
               style="border-radius:12px"
-              src=""
+              src="https://open.spotify.com/embed/artist/46j44ZCML1G2AXb96FLP1k?utm_source=generator&theme=0"
               width="100%"
-              height="152"
+              height="352"
               frameBorder="0"
               allowfullscreen=""
               allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
               loading="lazy"
-              title="Spotify player"
+              title="Spotify — INTERSTELLAR"
             ></iframe>
           </div>
 
-          <div class="mt-4 player-tabs flex gap-2">
-            <button type="button" data-player="spotify" class="player-tab">Spotify</button>
-            <button type="button" data-player="youtube" class="player-tab">YouTube</button>
+          <!-- Apple Music Humans (shown when tab switched) -->
+          <div id="apple-panel" class="hidden mt-4">
+            <a
+              href="https://music.apple.com/gb/album/humans-single/1716240182"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center justify-between gap-4 w-full p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-pink-600/30 via-purple-600/25 to-cosmic-purple/30 border border-white/15 hover:border-pink-400/40 transition-all group"
+            >
+              <div class="text-left">
+                <p class="font-display font-semibold text-white group-hover:text-earth-amber transition-colors">Open Humans on Apple Music</p>
+                <p class="text-sm text-white/50">music.apple.com · Humans - Single</p>
+              </div>
+              <span class="text-white/40 group-hover:text-white text-xl" aria-hidden="true">→</span>
+            </a>
           </div>
-          <div id="youtube-embed" class="hidden mt-4 rounded-2xl overflow-hidden border border-white/10 aspect-video bg-black/50">
-            <iframe
-              class="w-full h-full min-h-[200px]"
-              src=""
-              title="YouTube music video"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-              loading="lazy"
-            ></iframe>
-          </div>
+
           <p class="mt-4 text-xs text-white/30 text-center">
-            Have Spotify or YouTube? Send the links and we can embed them here too.
+            Full profile:
+            <a class="text-white/50 hover:text-earth-amber underline-offset-2 hover:underline" href="https://open.spotify.com/artist/46j44ZCML1G2AXb96FLP1k" target="_blank" rel="noopener noreferrer">Spotify</a>
+            ·
+            <a class="text-white/50 hover:text-earth-amber underline-offset-2 hover:underline" href="https://music.apple.com/gb/artist/interstellar/1716207057" target="_blank" rel="noopener noreferrer">Apple Music</a>
           </p>
         </div>
       </div>
@@ -1578,13 +1568,13 @@
         <div class="section-header reveal text-center mb-14">
           <p class="font-display text-xs tracking-[0.3em] uppercase text-cosmic-violet mb-3">The Catalog</p>
           <h2 class="font-display text-3xl sm:text-4xl font-semibold">Discography</h2>
-          <p class="mt-3 text-white/50 max-w-md mx-auto">Real releases from Apple Music — tap a planet to listen.</p>
+          <p class="mt-3 text-white/50 max-w-md mx-auto">Listen on Apple Music or Spotify — pick your planet.</p>
           <div class="section-line mx-auto mt-4"></div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
-          <!-- Artwork spheres — cover art wrapped on planet surfaces -->
-          <a href="https://music.apple.com/gb/album/high-on-life-demo-single/1803844691" target="_blank" rel="noopener noreferrer" class="reveal disc-card group block">
+          <!-- Each release: planet art + Apple Music + Spotify -->
+          <article class="reveal disc-card group">
             <div class="planet-card">
               <div class="planet-sphere planet-sphere-art" style="background-image:url('https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/5d/d9/c2/5dd9c22d-0cf6-d1ae-a3ae-a87ae7b00535/artwork.jpg/600x600bb.jpg')">
                 <div class="planet-atmosphere"></div>
@@ -1594,11 +1584,14 @@
             <div class="mt-6 text-center">
               <h3 class="font-display text-lg font-semibold group-hover:text-earth-amber transition-colors">High on life (Demo)</h3>
               <p class="text-sm text-white/45 mt-1">Single · 2025</p>
-              <p class="text-xs text-white/30 mt-2">Apple Music →</p>
+              <div class="stream-links">
+                <a class="stream-btn stream-btn-apple" href="https://music.apple.com/gb/album/high-on-life-demo-single/1803844691" target="_blank" rel="noopener noreferrer">Apple Music</a>
+                <a class="stream-btn stream-btn-spotify" href="https://open.spotify.com/album/22LKHVQAAblAGswlHL3dBb" target="_blank" rel="noopener noreferrer">Spotify</a>
+              </div>
             </div>
-          </a>
+          </article>
 
-          <a href="https://music.apple.com/gb/album/crazy-about-you-single/1796027602" target="_blank" rel="noopener noreferrer" class="reveal reveal-delay-1 disc-card group block">
+          <article class="reveal reveal-delay-1 disc-card group">
             <div class="planet-card">
               <div class="planet-sphere planet-sphere-art" style="background-image:url('https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/b7/9e/39/b79e3990-f85f-2913-79e9-41ad884451e4/artwork.jpg/600x600bb.jpg')">
                 <div class="planet-atmosphere"></div>
@@ -1607,11 +1600,14 @@
             <div class="mt-6 text-center">
               <h3 class="font-display text-lg font-semibold group-hover:text-cosmic-violet transition-colors">Crazy about you</h3>
               <p class="text-sm text-white/45 mt-1">Single · 2025</p>
-              <p class="text-xs text-white/30 mt-2">Apple Music →</p>
+              <div class="stream-links">
+                <a class="stream-btn stream-btn-apple" href="https://music.apple.com/gb/album/crazy-about-you-single/1796027602" target="_blank" rel="noopener noreferrer">Apple Music</a>
+                <a class="stream-btn stream-btn-spotify" href="https://open.spotify.com/album/19XYptH1QGlWbClnhxwHLf" target="_blank" rel="noopener noreferrer">Spotify</a>
+              </div>
             </div>
-          </a>
+          </article>
 
-          <a href="https://music.apple.com/gb/album/how-you-been-livin-demo-single/1787519147" target="_blank" rel="noopener noreferrer" class="reveal reveal-delay-2 disc-card group block">
+          <article class="reveal reveal-delay-2 disc-card group">
             <div class="planet-card">
               <div class="planet-sphere planet-sphere-art" style="background-image:url('https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/7e/b8/f1/7eb8f1cf-a1df-f936-bc43-7a5b782a1f1e/artwork.jpg/600x600bb.jpg')">
                 <div class="planet-atmosphere"></div>
@@ -1620,11 +1616,14 @@
             <div class="mt-6 text-center">
               <h3 class="font-display text-lg font-semibold group-hover:text-cosmic-cyan transition-colors">How you been livin? (Demo)</h3>
               <p class="text-sm text-white/45 mt-1">Single · 2024</p>
-              <p class="text-xs text-white/30 mt-2">Apple Music →</p>
+              <div class="stream-links">
+                <a class="stream-btn stream-btn-apple" href="https://music.apple.com/gb/album/how-you-been-livin-demo-single/1787519147" target="_blank" rel="noopener noreferrer">Apple Music</a>
+                <a class="stream-btn stream-btn-spotify" href="https://open.spotify.com/album/0b3amTIUr9hKXJemDPqoGL" target="_blank" rel="noopener noreferrer">Spotify</a>
+              </div>
             </div>
-          </a>
+          </article>
 
-          <a href="https://music.apple.com/gb/album/heavens-door-single/1768581083" target="_blank" rel="noopener noreferrer" class="reveal disc-card group block">
+          <article class="reveal disc-card group">
             <div class="planet-card">
               <div class="planet-sphere planet-sphere-art" style="background-image:url('https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/cb/ef/70/cbef705f-4c8c-869b-e257-23bd6112f847/artwork.jpg/600x600bb.jpg')">
                 <div class="planet-atmosphere"></div>
@@ -1634,11 +1633,14 @@
             <div class="mt-6 text-center">
               <h3 class="font-display text-lg font-semibold group-hover:text-earth-moss transition-colors">Heavens Door</h3>
               <p class="text-sm text-white/45 mt-1">Single · 2024</p>
-              <p class="text-xs text-white/30 mt-2">Apple Music →</p>
+              <div class="stream-links">
+                <a class="stream-btn stream-btn-apple" href="https://music.apple.com/gb/album/heavens-door-single/1768581083" target="_blank" rel="noopener noreferrer">Apple Music</a>
+                <a class="stream-btn stream-btn-spotify" href="https://open.spotify.com/album/5dvdDwQOuhpYykljVEXmET" target="_blank" rel="noopener noreferrer">Spotify</a>
+              </div>
             </div>
-          </a>
+          </article>
 
-          <a href="https://music.apple.com/gb/album/water-single/1756337238" target="_blank" rel="noopener noreferrer" class="reveal reveal-delay-1 disc-card group block">
+          <article class="reveal reveal-delay-1 disc-card group">
             <div class="planet-card">
               <div class="planet-sphere planet-sphere-art" style="background-image:url('https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/6d/74/c9/6d74c9e1-e9f6-0655-a859-fd616df08e20/artwork.jpg/600x600bb.jpg')">
                 <div class="planet-atmosphere"></div>
@@ -1647,11 +1649,14 @@
             <div class="mt-6 text-center">
               <h3 class="font-display text-lg font-semibold group-hover:text-earth-green transition-colors">Water</h3>
               <p class="text-sm text-white/45 mt-1">Single · 2024</p>
-              <p class="text-xs text-white/30 mt-2">Apple Music →</p>
+              <div class="stream-links">
+                <a class="stream-btn stream-btn-apple" href="https://music.apple.com/gb/album/water-single/1756337238" target="_blank" rel="noopener noreferrer">Apple Music</a>
+                <a class="stream-btn stream-btn-spotify" href="https://open.spotify.com/album/2fY6jz3egfxdbOTKyuGGJl" target="_blank" rel="noopener noreferrer">Spotify</a>
+              </div>
             </div>
-          </a>
+          </article>
 
-          <a href="https://music.apple.com/gb/album/evolution-single/1747805531" target="_blank" rel="noopener noreferrer" class="reveal reveal-delay-2 disc-card group block">
+          <article class="reveal reveal-delay-2 disc-card group">
             <div class="planet-card">
               <div class="planet-sphere planet-sphere-art" style="background-image:url('https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/c7/62/f4/c762f4fd-d395-e7e9-e5bc-4a4670777c5f/artwork.jpg/600x600bb.jpg')">
                 <div class="planet-atmosphere"></div>
@@ -1661,11 +1666,14 @@
             <div class="mt-6 text-center">
               <h3 class="font-display text-lg font-semibold group-hover:text-cosmic-cyan transition-colors">Evolution</h3>
               <p class="text-sm text-white/45 mt-1">Single · 2024</p>
-              <p class="text-xs text-white/30 mt-2">Apple Music →</p>
+              <div class="stream-links">
+                <a class="stream-btn stream-btn-apple" href="https://music.apple.com/gb/album/evolution-single/1747805531" target="_blank" rel="noopener noreferrer">Apple Music</a>
+                <a class="stream-btn stream-btn-spotify" href="https://open.spotify.com/album/2O2L4GHYMB9TgOeH5G9SBc" target="_blank" rel="noopener noreferrer">Spotify</a>
+              </div>
             </div>
-          </a>
+          </article>
 
-          <a href="https://music.apple.com/gb/album/dont-stray-single/1746199801" target="_blank" rel="noopener noreferrer" class="reveal disc-card group block">
+          <article class="reveal disc-card group">
             <div class="planet-card">
               <div class="planet-sphere planet-sphere-art" style="background-image:url('https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/fe/84/7b/fe847bac-e19d-ce1a-fff4-3b7568df4115/artwork.jpg/600x600bb.jpg')">
                 <div class="planet-atmosphere"></div>
@@ -1674,11 +1682,14 @@
             <div class="mt-6 text-center">
               <h3 class="font-display text-lg font-semibold group-hover:text-cosmic-violet transition-colors">Don't Stray</h3>
               <p class="text-sm text-white/45 mt-1">Single · 2024</p>
-              <p class="text-xs text-white/30 mt-2">Apple Music →</p>
+              <div class="stream-links">
+                <a class="stream-btn stream-btn-apple" href="https://music.apple.com/gb/album/dont-stray-single/1746199801" target="_blank" rel="noopener noreferrer">Apple Music</a>
+                <a class="stream-btn stream-btn-spotify" href="https://open.spotify.com/album/7nAsqNBQkltVNgr2OBt2tD" target="_blank" rel="noopener noreferrer">Spotify</a>
+              </div>
             </div>
-          </a>
+          </article>
 
-          <a href="https://music.apple.com/gb/album/humans-single/1716240182" target="_blank" rel="noopener noreferrer" class="reveal reveal-delay-1 disc-card group block">
+          <article class="reveal reveal-delay-1 disc-card group">
             <div class="planet-card">
               <div class="planet-sphere planet-sphere-art" style="background-image:url('https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/a3/28/0d/a3280d1f-c977-2f22-5851-68dec3448a0b/artwork.jpg/600x600bb.jpg')">
                 <div class="planet-atmosphere"></div>
@@ -1688,9 +1699,12 @@
             <div class="mt-6 text-center">
               <h3 class="font-display text-lg font-semibold group-hover:text-white transition-colors">Humans</h3>
               <p class="text-sm text-white/45 mt-1">Single · 2023</p>
-              <p class="text-xs text-white/30 mt-2">Apple Music →</p>
+              <div class="stream-links">
+                <a class="stream-btn stream-btn-apple" href="https://music.apple.com/gb/album/humans-single/1716240182" target="_blank" rel="noopener noreferrer">Apple Music</a>
+                <a class="stream-btn stream-btn-spotify" href="https://open.spotify.com/album/6GUoCEVEp0asXUtx8FtxQu" target="_blank" rel="noopener noreferrer">Spotify</a>
+              </div>
             </div>
-          </a>
+          </article>
         </div>
       </div>
     </section>
@@ -1932,7 +1946,7 @@
           <a href="#gallery" class="hover:text-earth-amber transition-colors">Gallery</a>
         </div>
         <div class="flex items-center gap-3">
-          <a href="https://open.spotify.com" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Spotify">
+          <a href="https://open.spotify.com/artist/46j44ZCML1G2AXb96FLP1k?si=CYuTBbp4QmCflk2p58u8tg" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Spotify">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
           </a>
           <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="YouTube">

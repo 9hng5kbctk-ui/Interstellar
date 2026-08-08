@@ -287,10 +287,10 @@
     });
   }
 
-  // ----- Player tabs (Spotify / YouTube) -----
+  // ----- Player tabs (Spotify / Apple Music) -----
   const playerTabs = document.querySelectorAll('.player-tab');
   const spotifyWrap = document.querySelector('.player-embed');
-  const youtubeEmbed = document.getElementById('youtube-embed');
+  const applePanel = document.getElementById('apple-panel');
 
   playerTabs.forEach((tab) => {
     tab.addEventListener('click', () => {
@@ -298,12 +298,12 @@
       playerTabs.forEach((t) => t.classList.remove('active'));
       tab.classList.add('active');
 
-      if (target === 'youtube') {
+      if (target === 'apple') {
         if (spotifyWrap) spotifyWrap.classList.add('hidden');
-        if (youtubeEmbed) youtubeEmbed.classList.remove('hidden');
+        if (applePanel) applePanel.classList.remove('hidden');
       } else {
         if (spotifyWrap) spotifyWrap.classList.remove('hidden');
-        if (youtubeEmbed) youtubeEmbed.classList.add('hidden');
+        if (applePanel) applePanel.classList.add('hidden');
       }
     });
   });
