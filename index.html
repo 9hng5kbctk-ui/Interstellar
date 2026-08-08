@@ -97,7 +97,7 @@
       opacity: 0 !important;
     }
 
-    /* ===== WORMHOLE TRANSITION (geometric + INTERSTELLAR sides + whoosh) ===== */
+    /* ===== CINEMATIC WORMHOLE (Termostratos-style tunnel) ===== */
     #wormhole {
       position: fixed;
       inset: 0;
@@ -113,305 +113,93 @@
       visibility: visible;
       pointer-events: all;
     }
-    #wormhole .wh-sky {
+    #wormhole-canvas {
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(circle at 50% 50%, #2e1065 0%, #0f0520 40%, #030010 70%, #000 100%);
-    }
-    /* Sacred-geometry grid layer */
-    #wormhole .wh-geo {
-      position: absolute;
-      inset: -20%;
-      z-index: 0;
-      opacity: 0.55;
-      background-image:
-        repeating-linear-gradient(
-          0deg,
-          transparent 0,
-          transparent 38px,
-          rgba(167, 139, 250, 0.12) 38px,
-          rgba(167, 139, 250, 0.12) 39px
-        ),
-        repeating-linear-gradient(
-          90deg,
-          transparent 0,
-          transparent 38px,
-          rgba(56, 189, 248, 0.1) 38px,
-          rgba(56, 189, 248, 0.1) 39px
-        ),
-        repeating-linear-gradient(
-          45deg,
-          transparent 0,
-          transparent 54px,
-          rgba(244, 114, 182, 0.08) 54px,
-          rgba(244, 114, 182, 0.08) 55px
-        ),
-        repeating-linear-gradient(
-          -45deg,
-          transparent 0,
-          transparent 54px,
-          rgba(167, 139, 250, 0.07) 54px,
-          rgba(167, 139, 250, 0.07) 55px
-        );
-      transform-origin: center;
-    }
-    #wormhole.is-active .wh-geo {
-      animation: whGeoRush 2.5s cubic-bezier(0.4, 0, 0.6, 1) forwards;
-    }
-    @keyframes whGeoRush {
-      0%   { transform: scale(0.4) rotate(0deg); opacity: 0.3; }
-      50%  { transform: scale(1.2) rotate(25deg); opacity: 0.65; }
-      100% { transform: scale(3.5) rotate(70deg); opacity: 0.15; }
-    }
-    /* Hex / diamond pattern overlay */
-    #wormhole .wh-hex {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      opacity: 0.4;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='92' viewBox='0 0 80 92'%3E%3Cpath d='M40 2 L76 23 L76 69 L40 90 L4 69 L4 23 Z' fill='none' stroke='%23a78bfa' stroke-opacity='0.35' stroke-width='1'/%3E%3Cpath d='M40 18 L60 30 L60 54 L40 66 L20 54 L20 30 Z' fill='none' stroke='%23f472b6' stroke-opacity='0.25' stroke-width='0.8'/%3E%3C/svg%3E");
-      background-size: 80px 92px;
-    }
-    #wormhole.is-active .wh-hex {
-      animation: whHexZoom 2.5s ease-in forwards;
-    }
-    @keyframes whHexZoom {
-      0%   { background-size: 40px 46px; opacity: 0.2; transform: scale(1) rotate(0deg); }
-      100% { background-size: 220px 252px; opacity: 0.1; transform: scale(1.4) rotate(-20deg); }
-    }
-    #wormhole .wh-tunnel {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: min(150vw, 150vh);
-      height: min(150vw, 150vh);
-      margin: calc(min(150vw, 150vh) / -2) 0 0 calc(min(150vw, 150vh) / -2);
-      border-radius: 50%;
-      z-index: 2;
-      transform-style: preserve-3d;
-    }
-    #wormhole.is-active .wh-tunnel {
-      animation:
-        whSpin 1.8s linear infinite,
-        whDive 2.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
-    }
-    @keyframes whSpin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    @keyframes whDive {
-      0%   { transform: rotate(0deg) scale(0.25); }
-      35%  { transform: rotate(140deg) scale(0.95); }
-      100% { transform: rotate(480deg) scale(3.4); }
-    }
-    #wormhole .wh-ring {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      border-radius: 50%;
-      border-style: solid;
-      transform: translate(-50%, -50%);
-      box-shadow:
-        0 0 18px rgba(167, 139, 250, 0.4),
-        inset 0 0 24px rgba(244, 114, 182, 0.12);
-    }
-    /* Geometric dashed / double rings */
-    #wormhole .wh-ring:nth-child(odd) {
-      border-style: dashed;
-    }
-    #wormhole .wh-ring:nth-child(3n) {
-      border-style: double;
-    }
-    #wormhole .wh-ring:nth-child(1)  { width: 7%;  height: 7%;  border-width: 2px; border-color: rgba(255,255,255,0.95); box-shadow: 0 0 28px #fff, inset 0 0 16px #c4b5fd; }
-    #wormhole .wh-ring:nth-child(2)  { width: 14%; height: 14%; border-width: 2px; border-color: rgba(251,207,232,0.9); }
-    #wormhole .wh-ring:nth-child(3)  { width: 22%; height: 22%; border-width: 3px; border-color: rgba(244,114,182,0.8); }
-    #wormhole .wh-ring:nth-child(4)  { width: 32%; height: 32%; border-width: 3px; border-color: rgba(167,139,250,0.75); }
-    #wormhole .wh-ring:nth-child(5)  { width: 44%; height: 44%; border-width: 4px; border-color: rgba(99,102,241,0.7); }
-    #wormhole .wh-ring:nth-child(6)  { width: 56%; height: 56%; border-width: 4px; border-color: rgba(56,189,248,0.55); }
-    #wormhole .wh-ring:nth-child(7)  { width: 68%; height: 68%; border-width: 5px; border-color: rgba(124,58,237,0.55); }
-    #wormhole .wh-ring:nth-child(8)  { width: 80%; height: 80%; border-width: 5px; border-color: rgba(236,72,153,0.42); }
-    #wormhole .wh-ring:nth-child(9)  { width: 92%; height: 92%; border-width: 6px; border-color: rgba(67,56,202,0.38); }
-    #wormhole .wh-ring:nth-child(10) { width: 106%; height: 106%; border-width: 6px; border-color: rgba(30,27,75,0.55); }
-
-    /* Rotating diamond / square frames for geometry */
-    #wormhole .wh-poly {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      z-index: 2;
-      border: 1.5px solid rgba(167, 139, 250, 0.45);
-      box-shadow: 0 0 20px rgba(124, 58, 237, 0.25);
-      transform: translate(-50%, -50%) rotate(0deg);
-    }
-    #wormhole .wh-poly.p1 { width: 28%; height: 28%; animation: whPoly 3s linear infinite; border-color: rgba(244,114,182,0.5); }
-    #wormhole .wh-poly.p2 { width: 42%; height: 42%; animation: whPoly 4s linear infinite reverse; border-color: rgba(56,189,248,0.4); }
-    #wormhole .wh-poly.p3 { width: 56%; height: 56%; animation: whPoly 5s linear infinite; border-color: rgba(167,139,250,0.35); clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); border: none; background: transparent; outline: 1px solid rgba(251,207,232,0.35); outline-offset: -1px; }
-    #wormhole.is-active .wh-poly {
-      animation-duration: 1.2s;
-    }
-    #wormhole.is-active .wh-poly.p1 { animation: whPoly 1.1s linear infinite, whPolyGrow 2.5s ease-in forwards; }
-    #wormhole.is-active .wh-poly.p2 { animation: whPoly 1.4s linear infinite reverse, whPolyGrow 2.5s ease-in forwards; }
-    #wormhole.is-active .wh-poly.p3 { animation: whPoly 1.6s linear infinite, whPolyGrow 2.5s ease-in forwards; }
-    @keyframes whPoly {
-      from { transform: translate(-50%, -50%) rotate(0deg); }
-      to { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-    @keyframes whPolyGrow {
-      0%   { opacity: 0.9; }
-      100% { opacity: 0.2; transform: translate(-50%, -50%) rotate(180deg) scale(2.8); }
-    }
-
-    #wormhole .wh-core {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 14px;
-      height: 14px;
-      margin: -7px 0 0 -7px;
-      border-radius: 50%;
-      background: #fff;
-      z-index: 3;
-      box-shadow:
-        0 0 20px 8px #fff,
-        0 0 60px 24px rgba(167,139,250,0.9),
-        0 0 120px 48px rgba(244,114,182,0.5);
-    }
-    #wormhole.is-active .wh-core {
-      animation: whCoreGrow 2.5s ease-in forwards;
-    }
-    @keyframes whCoreGrow {
-      0%   { transform: scale(1); opacity: 1; }
-      65%  { transform: scale(10); opacity: 1; }
-      100% { transform: scale(90); opacity: 1; }
-    }
-    #wormhole .wh-streaks {
-      position: absolute;
-      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
       z-index: 1;
-      overflow: hidden;
     }
-    #wormhole .wh-streak {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 2px;
-      height: 42vh;
-      margin-left: -1px;
-      transform-origin: center top;
-      background: linear-gradient(
-        to bottom,
-        transparent,
-        rgba(167, 139, 250, 0.5),
-        rgba(255, 255, 255, 0.9),
-        transparent
-      );
-      opacity: 0;
-    }
-    #wormhole.is-active .wh-streak {
-      animation: whStreak 0.5s linear infinite;
-    }
-    @keyframes whStreak {
-      0%   { transform: rotate(var(--r, 0deg)) translateY(0) scaleY(0.15); opacity: 0; }
-      15%  { opacity: 0.95; }
-      100% { transform: rotate(var(--r, 0deg)) translateY(58vh) scaleY(1.5); opacity: 0; }
-    }
-
-    /* INTERSTELLAR on both walls of the tunnel */
+    /* INTERSTELLAR along both tunnel walls */
     #wormhole .wh-side-text {
       position: absolute;
       top: 50%;
       z-index: 4;
       margin: 0;
-      padding: 0;
       font-family: Orbitron, system-ui, sans-serif;
       font-weight: 700;
-      font-size: clamp(1.1rem, 3.5vw, 2rem);
-      letter-spacing: 0.45em;
+      font-size: clamp(1rem, 3.2vw, 1.85rem);
+      letter-spacing: 0.42em;
       text-transform: uppercase;
-      color: rgba(233, 213, 255, 0.92);
+      color: rgba(255, 240, 255, 0.9);
       text-shadow:
-        0 0 10px rgba(167, 139, 250, 1),
-        0 0 28px rgba(244, 114, 182, 0.7),
-        0 0 48px rgba(124, 58, 237, 0.5);
+        0 0 12px rgba(255, 80, 160, 0.95),
+        0 0 30px rgba(120, 80, 255, 0.8),
+        0 0 50px rgba(80, 160, 255, 0.5);
       white-space: nowrap;
       pointer-events: none;
       opacity: 0;
     }
     #wormhole .wh-side-text.left {
-      left: 4vw;
+      left: 3vw;
       transform: translateY(-50%) rotate(-90deg);
-      transform-origin: center center;
     }
     #wormhole .wh-side-text.right {
-      right: 4vw;
+      right: 3vw;
       transform: translateY(-50%) rotate(90deg);
-      transform-origin: center center;
     }
     #wormhole.is-active .wh-side-text {
-      animation: whSideIn 2.4s ease-out forwards;
+      animation: whSideIn 2.5s ease-out forwards;
     }
     #wormhole.is-active .wh-side-text.right {
-      animation-delay: 0.08s;
+      animation-delay: 0.1s;
     }
     @keyframes whSideIn {
-      0%   { opacity: 0; filter: blur(8px); letter-spacing: 0.8em; }
-      15%  { opacity: 1; filter: blur(0); letter-spacing: 0.45em; }
-      75%  { opacity: 1; filter: blur(0); }
-      100% { opacity: 0; filter: blur(6px); letter-spacing: 0.2em; }
+      0%   { opacity: 0; filter: blur(10px); letter-spacing: 0.7em; }
+      12%  { opacity: 1; filter: blur(0); letter-spacing: 0.42em; }
+      70%  { opacity: 0.95; }
+      100% { opacity: 0; filter: blur(8px); }
     }
-    /* Extra floating INTERSTELLAR copies deeper in the tunnel */
-    #wormhole .wh-side-text.mid-left {
-      left: 12vw;
-      font-size: clamp(0.7rem, 2vw, 1rem);
-      opacity: 0;
-      color: rgba(196, 181, 253, 0.55);
-    }
-    #wormhole .wh-side-text.mid-right {
-      right: 12vw;
-      font-size: clamp(0.7rem, 2vw, 1rem);
-      opacity: 0;
-      color: rgba(249, 168, 212, 0.55);
-    }
-    #wormhole.is-active .wh-side-text.mid-left,
-    #wormhole.is-active .wh-side-text.mid-right {
-      animation: whSideIn 2s ease-out 0.25s forwards;
-    }
-
     #wormhole .wh-exit-flash {
       position: absolute;
       inset: 0;
       z-index: 6;
-      background: radial-gradient(circle at center, #fff 0%, #e9d5ff 28%, #7c3aed 65%, #000 100%);
+      background: radial-gradient(circle at center,
+        #fff 0%,
+        #ffd6f0 18%,
+        #c084fc 40%,
+        #1e3a8a 70%,
+        #000 100%);
       opacity: 0;
       pointer-events: none;
     }
     #wormhole.is-exiting .wh-exit-flash {
-      animation: whExitFlash 0.85s ease-out forwards;
+      animation: whExitFlash 0.9s ease-out forwards;
     }
     @keyframes whExitFlash {
       0%   { opacity: 0; }
-      35%  { opacity: 1; }
+      30%  { opacity: 1; }
       100% { opacity: 0; }
     }
     #wormhole.is-exiting {
-      transition: opacity 0.6s ease 0.35s, visibility 0.6s ease 0.35s;
+      transition: opacity 0.55s ease 0.3s, visibility 0.55s ease 0.3s;
       opacity: 0;
       visibility: hidden;
     }
     body.site-emerging main,
     body.site-emerging header {
-      animation: siteEmerge 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation: siteEmerge 1.15s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
     @keyframes siteEmerge {
       0% {
         opacity: 0;
-        transform: scale(0.72);
-        filter: blur(12px) brightness(2);
+        transform: scale(0.55);
+        filter: blur(16px) brightness(2.2);
       }
-      45% {
+      40% {
         opacity: 1;
-        filter: blur(2px) brightness(1.3);
+        filter: blur(3px) brightness(1.4);
       }
       100% {
         opacity: 1;
@@ -420,12 +208,6 @@
       }
     }
     @media (prefers-reduced-motion: reduce) {
-      #wormhole .wh-tunnel,
-      #wormhole .wh-core,
-      #wormhole .wh-streak,
-      #wormhole .wh-geo,
-      #wormhole .wh-hex,
-      #wormhole .wh-poly,
       #wormhole .wh-side-text,
       body.site-emerging main,
       body.site-emerging header {
@@ -433,10 +215,8 @@
       }
     }
     @media (max-width: 520px) {
-      #wormhole .wh-side-text.left { left: 1vw; letter-spacing: 0.28em; font-size: 0.95rem; }
-      #wormhole .wh-side-text.right { right: 1vw; letter-spacing: 0.28em; font-size: 0.95rem; }
-      #wormhole .wh-side-text.mid-left,
-      #wormhole .wh-side-text.mid-right { display: none; }
+      #wormhole .wh-side-text.left { left: 0.5vw; letter-spacing: 0.25em; font-size: 0.9rem; }
+      #wormhole .wh-side-text.right { right: 0.5vw; letter-spacing: 0.25em; font-size: 0.9rem; }
     }
     #gate-stars {
       position: absolute !important; inset: 0 !important;
@@ -1003,32 +783,11 @@
     <div id="enter-flash" class="enter-flash" aria-hidden="true"></div>
   </div>
 
-  <!-- Wormhole tunnel — geometric + INTERSTELLAR walls + whoosh -->
+  <!-- Cinematic wormhole (canvas tunnel like the reference clip) -->
   <div id="wormhole" aria-hidden="true">
-    <div class="wh-sky"></div>
-    <div class="wh-geo" aria-hidden="true"></div>
-    <div class="wh-hex" aria-hidden="true"></div>
-    <div class="wh-streaks" id="wh-streaks"></div>
-    <div class="wh-tunnel">
-      <div class="wh-ring"></div>
-      <div class="wh-ring"></div>
-      <div class="wh-ring"></div>
-      <div class="wh-ring"></div>
-      <div class="wh-ring"></div>
-      <div class="wh-ring"></div>
-      <div class="wh-ring"></div>
-      <div class="wh-ring"></div>
-      <div class="wh-ring"></div>
-      <div class="wh-ring"></div>
-    </div>
-    <div class="wh-poly p1" aria-hidden="true"></div>
-    <div class="wh-poly p2" aria-hidden="true"></div>
-    <div class="wh-poly p3" aria-hidden="true"></div>
-    <div class="wh-core"></div>
+    <canvas id="wormhole-canvas"></canvas>
     <p class="wh-side-text left">INTERSTELLAR</p>
     <p class="wh-side-text right">INTERSTELLAR</p>
-    <p class="wh-side-text left mid-left">INTERSTELLAR</p>
-    <p class="wh-side-text right mid-right">INTERSTELLAR</p>
     <div class="wh-exit-flash"></div>
   </div>
 
@@ -1357,21 +1116,202 @@
       }
     }
 
+    /**
+     * Canvas wormhole fly-through
+     * Inspired by cinematic CGI tunnels (smooth energy walls, red/magenta → blue,
+     * bright vanishing point, radial speed streaks).
+     */
+    function runWormholeCanvas(durationMs) {
+      var canvas = document.getElementById('wormhole-canvas');
+      if (!canvas || !canvas.getContext) return function () {};
+      var ctx = canvas.getContext('2d');
+      var w = 0, h = 0, cx = 0, cy = 0;
+      var start = performance.now();
+      var running = true;
+      var raf = null;
+
+      // Tunnel ring depths 0 (far/center) → 1 (near/camera)
+      var RING_COUNT = 48;
+      var rings = [];
+      for (var i = 0; i < RING_COUNT; i++) {
+        rings.push(i / RING_COUNT);
+      }
+
+      // Radial speed streaks
+      var streaks = [];
+      for (var s = 0; s < 90; s++) {
+        streaks.push({
+          a: Math.random() * Math.PI * 2,
+          d: Math.random(),
+          len: 0.08 + Math.random() * 0.22,
+          w: 0.6 + Math.random() * 1.8,
+          sp: 0.012 + Math.random() * 0.03
+        });
+      }
+
+      function resize() {
+        w = window.innerWidth;
+        h = window.innerHeight;
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        cx = w / 2;
+        cy = h / 2;
+      }
+      resize();
+
+      function ringRadius(depth) {
+        // Perspective: near rings huge, far rings tiny (vanishing point)
+        var t = Math.pow(depth, 1.55);
+        return Math.max(w, h) * 0.02 + t * Math.max(w, h) * 0.95;
+      }
+
+      function drawFrame(now) {
+        if (!running) return;
+        var elapsed = now - start;
+        var progress = Math.min(1, elapsed / durationMs);
+        // Accelerate through the tunnel
+        var speed = 0.014 + progress * 0.045;
+
+        ctx.fillStyle = '#000010';
+        ctx.fillRect(0, 0, w, h);
+
+        // Soft nebula wash — magenta left / blue right (like the reference)
+        var bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w, h) * 0.7);
+        bg.addColorStop(0, 'rgba(255,255,255,0.12)');
+        bg.addColorStop(0.15, 'rgba(180,80,255,0.08)');
+        bg.addColorStop(0.45, 'rgba(40,20,80,0.35)');
+        bg.addColorStop(1, 'rgba(0,0,8,1)');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+
+        // Side color blooms
+        var leftBloom = ctx.createRadialGradient(0, cy, 0, 0, cy, w * 0.55);
+        leftBloom.addColorStop(0, 'rgba(220, 30, 90, 0.35)');
+        leftBloom.addColorStop(1, 'transparent');
+        ctx.fillStyle = leftBloom;
+        ctx.fillRect(0, 0, w, h);
+
+        var rightBloom = ctx.createRadialGradient(w, cy, 0, w, cy, w * 0.55);
+        rightBloom.addColorStop(0, 'rgba(40, 90, 220, 0.32)');
+        rightBloom.addColorStop(1, 'transparent');
+        ctx.fillStyle = rightBloom;
+        ctx.fillRect(0, 0, w, h);
+
+        // Advance rings toward camera
+        for (var i = 0; i < rings.length; i++) {
+          rings[i] += speed;
+          if (rings[i] > 1.05) rings[i] -= 1.05;
+        }
+
+        // Draw rings far → near so near ones sit on top
+        var sorted = rings.slice().sort(function (a, b) { return a - b; });
+        for (var r = 0; r < sorted.length; r++) {
+          var d = sorted[r];
+          if (d < 0.02) continue;
+          var rad = ringRadius(d);
+          var alpha = Math.min(1, d * 1.3) * (1 - Math.pow(d, 2.2));
+          if (alpha < 0.02) continue;
+
+          // Smooth energy wall band
+          ctx.beginPath();
+          ctx.ellipse(cx, cy, rad, rad * 0.72, 0, 0, Math.PI * 2);
+
+          // Magenta→purple→blue along the ring (left warm, right cool)
+          var grad = ctx.createLinearGradient(cx - rad, cy, cx + rad, cy);
+          grad.addColorStop(0, 'rgba(255, 40, 100, ' + (alpha * 0.95) + ')');
+          grad.addColorStop(0.35, 'rgba(200, 60, 200, ' + (alpha * 0.75) + ')');
+          grad.addColorStop(0.55, 'rgba(120, 80, 255, ' + (alpha * 0.7) + ')');
+          grad.addColorStop(1, 'rgba(40, 120, 255, ' + (alpha * 0.95) + ')');
+
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = Math.max(1.5, 10 * d * (1.1 - d));
+          ctx.shadowColor = d < 0.5 ? 'rgba(180,80,255,0.5)' : 'rgba(255,60,140,0.45)';
+          ctx.shadowBlur = 12 * d;
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+
+          // Inner glow rim
+          if (d > 0.15 && d < 0.85) {
+            ctx.beginPath();
+            ctx.ellipse(cx, cy, rad * 0.97, rad * 0.7, 0, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(255,255,255,' + (alpha * 0.18) + ')';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+
+        // Radial light streaks (hyperspace / tunnel speed)
+        for (var j = 0; j < streaks.length; j++) {
+          var st = streaks[j];
+          st.d += st.sp + speed * 0.8;
+          if (st.d > 1.2) {
+            st.d = Math.random() * 0.1;
+            st.a = Math.random() * Math.PI * 2;
+          }
+          var r0 = ringRadius(Math.max(0.05, st.d - st.len));
+          var r1 = ringRadius(st.d);
+          var x0 = cx + Math.cos(st.a) * r0 * 0.72;
+          var y0 = cy + Math.sin(st.a) * r0 * 0.55;
+          var x1 = cx + Math.cos(st.a) * r1;
+          var y1 = cy + Math.sin(st.a) * r1 * 0.75;
+          var sa = Math.min(1, st.d) * 0.85;
+          ctx.beginPath();
+          ctx.moveTo(x0, y0);
+          ctx.lineTo(x1, y1);
+          ctx.strokeStyle = 'rgba(255,255,255,' + sa + ')';
+          ctx.lineWidth = st.w;
+          ctx.lineCap = 'round';
+          ctx.stroke();
+        }
+
+        // Bright vanishing-point core (end of the tunnel)
+        var coreR = 6 + progress * 40 + Math.sin(elapsed * 0.01) * 3;
+        var core = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 8);
+        core.addColorStop(0, 'rgba(255,255,255,1)');
+        core.addColorStop(0.12, 'rgba(255,220,255,0.95)');
+        core.addColorStop(0.35, 'rgba(200,120,255,0.45)');
+        core.addColorStop(0.65, 'rgba(80,100,255,0.12)');
+        core.addColorStop(1, 'transparent');
+        ctx.fillStyle = core;
+        ctx.beginPath();
+        ctx.arc(cx, cy, coreR * 8, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Vignette
+        var vig = ctx.createRadialGradient(cx, cy, Math.min(w, h) * 0.2, cx, cy, Math.max(w, h) * 0.75);
+        vig.addColorStop(0, 'transparent');
+        vig.addColorStop(1, 'rgba(0,0,0,0.55)');
+        ctx.fillStyle = vig;
+        ctx.fillRect(0, 0, w, h);
+
+        // Near end: white-out into exit
+        if (progress > 0.78) {
+          var flashA = (progress - 0.78) / 0.22;
+          ctx.fillStyle = 'rgba(255,255,255,' + (flashA * flashA) + ')';
+          ctx.fillRect(0, 0, w, h);
+        }
+
+        raf = requestAnimationFrame(drawFrame);
+      }
+
+      raf = requestAnimationFrame(drawFrame);
+      window.addEventListener('resize', resize);
+
+      return function stop() {
+        running = false;
+        if (raf) cancelAnimationFrame(raf);
+        window.removeEventListener('resize', resize);
+      };
+    }
+
     function enterSite() {
       var wormhole = document.getElementById('wormhole');
-      var streaks = document.getElementById('wh-streaks');
-
-      // Build radial light streaks once
-      if (streaks && !streaks.dataset.ready) {
-        streaks.dataset.ready = '1';
-        for (var i = 0; i < 36; i++) {
-          var s = document.createElement('div');
-          s.className = 'wh-streak';
-          s.style.setProperty('--r', (i * (360 / 36)) + 'deg');
-          s.style.animationDelay = (Math.random() * 0.45) + 's';
-          streaks.appendChild(s);
-        }
-      }
+      var stopTunnel = null;
+      var DURATION = 2600;
 
       // Whoosh (user click unlocks audio)
       playWormholeWhoosh();
@@ -1386,17 +1326,17 @@
 
       // Activate tunnel
       if (wormhole) {
-        // restart CSS animations if re-entered in same session
         wormhole.classList.remove('is-active', 'is-exiting');
         void wormhole.offsetWidth;
         wormhole.classList.add('is-active');
         wormhole.setAttribute('aria-hidden', 'false');
+        stopTunnel = runWormholeCanvas(DURATION);
       }
 
       // Shortly after dive starts, hide gate fully
       setTimeout(function () {
         gate.classList.add('is-into-wormhole', 'is-hidden');
-      }, 400);
+      }, 350);
 
       // Mid-flight: site is on the other side
       setTimeout(function () {
@@ -1405,21 +1345,22 @@
         document.body.classList.add('site-emerging');
         if (mini) mini.classList.remove('hidden');
         window.scrollTo(0, 0);
-      }, 1100);
+      }, 1200);
 
       // Exit burst
       setTimeout(function () {
         if (wormhole) wormhole.classList.add('is-exiting');
-      }, 2100);
+      }, 2300);
 
       // Cleanup
       setTimeout(function () {
+        if (typeof stopTunnel === 'function') stopTunnel();
         if (wormhole) {
           wormhole.classList.remove('is-active', 'is-exiting');
           wormhole.setAttribute('aria-hidden', 'true');
         }
         document.body.classList.remove('site-emerging');
-      }, 3000);
+      }, 3200);
     }
 
     if (audio) audio.volume = volume ? Number(volume.value) : 0.7;
